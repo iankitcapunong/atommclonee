@@ -1,0 +1,2893 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="assets/atom-mark.svg" />
+    <title>Atom — Book more coaching clients without the salesy push</title>
+    <meta name="description" content="Atom is the quiet client engine for online fitness coaches. Content brings warm leads in, an AI receptionist filters and books them, a tailored call closes them. Book a 20-minute strategy call." />
+    <meta property="og:title" content="Atom — Book more coaching clients without the salesy push" />
+    <meta property="og:description" content="The quiet client engine for online fitness coaches. Book a 20-min strategy call." />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="assets/discovery-bg.jpg" fetchpriority="high" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <style>
+      :root {
+        --paper:        oklch(8%  0.015 220);
+        --paper-2:      oklch(11% 0.018 220);
+        --paper-3:      oklch(14% 0.020 220);
+        --ink:          oklch(98% 0.005 220);
+        --ink-2:        oklch(88% 0.018 220);
+        --ink-3:        oklch(76% 0.030 215);
+        --rule:         oklch(50% 0.030 220 / 0.45);
+        --rule-soft:    oklch(50% 0.030 220 / 0.22);
+        --accent:       oklch(86% 0.165 215);
+        --accent-ink:   oklch(10% 0.050 220);
+        --focus:        oklch(92% 0.200 215);
+        --pill-fill:    oklch(8%  0.015 220 / 0.7);
+
+        --font-heading: "Merriweather", Georgia, "Times New Roman", serif;
+        --font-body:    "Merriweather", Georgia, "Times New Roman", serif;
+        --font-mono:    "Space Mono", ui-monospace, SFMono-Regular, monospace;
+
+        --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+        --dur-short:  220ms;
+        --radius-pill:  999px;
+        --radius-card:  12px;
+        --radius-input: 4px;
+
+        --max-w: 1180px;
+        --gutter: 24px;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+      }
+      img, svg { display: block; max-width: 100%; }
+      a { color: inherit; }
+      h1, h2, h3, h4 {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
+        margin: 0;
+      }
+      p { margin: 0; }
+      :focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      .container {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 0 var(--gutter);
+      }
+
+      .mono {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      /* ───────────────────────── Nav (floating pill — animated border + accent glow) ───────────────────────── */
+      .nav {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding: 5px;
+        border-radius: var(--radius-pill);
+        background:
+          linear-gradient(135deg,
+            oklch(82% 0.150 215 / 0.55) 0%,
+            oklch(50% 0.06  215 / 0.20) 30%,
+            oklch(40% 0.020 220 / 0.15) 50%,
+            oklch(50% 0.06  215 / 0.20) 70%,
+            oklch(82% 0.150 215 / 0.55) 100%);
+        background-size: 300% 300%;
+        animation: navBorderFlow 9s ease-in-out infinite;
+        max-width: calc(100vw - 24px);
+        box-shadow:
+          0 14px 40px -16px oklch(0% 0 0 / 0.55),
+          0 0 36px -8px oklch(82% 0.150 215 / 0.22);
+      }
+      @keyframes navBorderFlow {
+        0%, 100% { background-position: 0% 50%; }
+        50%      { background-position: 100% 50%; }
+      }
+
+      /* Inner glass fill — turns the animated gradient into a 1px border */
+      .nav::before {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: var(--radius-pill);
+        background: oklch(7% 0.012 220 / 0.78);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .nav > * { position: relative; z-index: 1; }
+
+      .nav-mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px 8px 14px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        border-right: 1px solid oklch(40% 0.06 215 / 0.25);
+        margin-right: 6px;
+        text-decoration: none;
+        white-space: nowrap;
+        color: var(--ink);
+        text-shadow: 0 0 10px oklch(82% 0.150 215 / 0.25);
+      }
+      .nav-mark-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow:
+          0 0 0 3px oklch(82% 0.150 215 / 0.18),
+          0 0 10px oklch(82% 0.150 215 / 0.85);
+        animation: atomPulse 1.6s infinite;
+        flex: none;
+      }
+
+      .nav a:not(.nav-mark):not(.cta) {
+        position: relative;
+        padding: 8px 14px;
+        color: var(--ink-2);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+        transition: color 220ms var(--ease-out), background-color 220ms var(--ease-out);
+        overflow: hidden;
+      }
+      .nav a:not(.nav-mark):not(.cta) > span {
+        position: relative;
+        z-index: 1;
+      }
+      .nav a:not(.nav-mark):not(.cta)::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(180deg,
+          oklch(20% 0.04 215 / 0.6),
+          oklch(14% 0.025 220 / 0.6));
+        opacity: 0;
+        transform: scale(0.85);
+        transition: opacity 260ms var(--ease-out), transform 320ms var(--ease-out);
+        z-index: 0;
+      }
+      .nav a:not(.nav-mark):not(.cta)::after {
+        content: "";
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 8px oklch(82% 0.150 215 / 0.9);
+        opacity: 0;
+        transition: opacity 220ms var(--ease-out), width 260ms var(--ease-out);
+      }
+      .nav a:not(.nav-mark):not(.cta):hover {
+        color: var(--ink);
+      }
+      .nav a:not(.nav-mark):not(.cta):hover::before {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .nav a:not(.nav-mark):not(.cta):hover::after {
+        opacity: 1;
+        width: 18px;
+        border-radius: 2px;
+      }
+
+      .nav a.cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--focus) 100%);
+        color: var(--accent-ink);
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: var(--radius-pill);
+        text-decoration: none;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        position: relative;
+        box-shadow:
+          0 0 0 1px oklch(82% 0.150 215 / 0.4),
+          0 6px 18px -8px oklch(82% 0.150 215 / 0.65),
+          inset 0 1px 0 oklch(100% 0 0 / 0.25);
+        transition: transform 220ms var(--ease-out), box-shadow 260ms var(--ease-out), background 260ms var(--ease-out);
+        overflow: hidden;
+      }
+      .nav a.cta > * { position: relative; z-index: 1; }
+      .nav a.cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(110deg,
+          transparent 30%,
+          oklch(100% 0 0 / 0.35) 50%,
+          transparent 70%);
+        transition: left 700ms var(--ease-out);
+        pointer-events: none;
+        z-index: 0;
+      }
+      .nav a.cta:hover {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg, var(--focus) 0%, var(--accent) 100%);
+        box-shadow:
+          0 0 0 1px oklch(82% 0.150 215 / 0.55),
+          0 10px 26px -10px oklch(82% 0.150 215 / 0.85),
+          0 0 24px -4px oklch(82% 0.150 215 / 0.5),
+          inset 0 1px 0 oklch(100% 0 0 / 0.3);
+      }
+      .nav a.cta:hover::before {
+        left: 140%;
+      }
+      .nav a.cta .cta-arrow {
+        width: 13px;
+        height: 13px;
+        flex: none;
+        transition: transform 260ms var(--ease-out);
+      }
+      .nav a.cta:hover .cta-arrow {
+        transform: translateX(2px);
+      }
+
+      @media (max-width: 767px) { .nav { display: none; } }
+
+      @media (prefers-reduced-motion: reduce) {
+        .nav, .nav-mark-dot { animation: none !important; }
+        .nav a.cta:hover { transform: none !important; }
+      }
+
+      .hamburger {
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 60;
+        width: 44px; height: 44px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: var(--pill-fill);
+        border: 1px solid var(--rule);
+        border-radius: 8px;
+        color: var(--ink);
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+      }
+      .hamburger svg { width: 22px; height: 22px; }
+      @media (max-width: 767px) { .hamburger { display: inline-flex; } }
+
+      .drawer {
+        position: fixed; inset: 0; z-index: 55;
+        background: var(--paper);
+        display: none;
+        flex-direction: column;
+        padding: 72px 24px 28px;
+        gap: 4px;
+      }
+      .drawer.open { display: flex; }
+      .drawer a {
+        padding: 16px 12px;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      .drawer a.cta {
+        margin-top: 18px;
+        text-align: center;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-radius: 50px;
+        border-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 14px;
+      }
+
+      /* ───────────────────────── Global atmospheric background (portrait + WebGL trails) ───────────────────────── */
+      /* Sits behind everything at z:0. Page content above (z:1+) covers it on
+         sections that have opaque bgs; only the hero stays transparent so the
+         trail animation is visible there as the brand centerpiece. */
+      .bg-portrait {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .bg-portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        opacity: 0.32;
+        mix-blend-mode: luminosity;
+        transform: scale(1.05);
+      }
+      .bg-portrait::before {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(70% 60% at 50% 0%, oklch(20% 0.06 215 / 0.35), transparent 70%),
+          linear-gradient(180deg, oklch(8% 0.015 220 / 0.45) 0%, oklch(8% 0.015 220 / 0.85) 80%, var(--paper) 100%);
+      }
+      #webgl-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.6;
+        mix-blend-mode: screen;
+      }
+      /* Lift all flowing page content above the fixed bg layer. */
+      .hero, section.s, section.soft, section.booking, footer.ft { position: relative; z-index: 1; }
+
+      /* ───────────────────────── Hero ───────────────────────── */
+      .hero {
+        padding: 160px 0 96px;
+        text-align: center;
+      }
+      /* Soft fade from transparent hero into the first opaque section so the
+         trail animation transitions cleanly. */
+      .hero::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: -1px;
+        height: 180px;
+        background: linear-gradient(180deg, transparent 0%, var(--paper-2) 100%);
+        z-index: -1;
+        pointer-events: none;
+      }
+      .hero .kicker { margin-bottom: 22px; }
+      .hero h1 {
+        font-size: clamp(40px, 6vw, 72px);
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        line-height: 1.0;
+        max-width: 16ch;
+        margin: 0 auto 20px;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero .sub {
+        max-width: 56ch;
+        margin: 0 auto 36px;
+        color: var(--ink-2);
+        font-size: clamp(16px, 1.6vw, 19px);
+        line-height: 1.55;
+      }
+      .cta-row {
+        display: inline-flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 26px;
+        border-radius: 50px;
+        font-family: var(--font-heading);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        border: 0;
+        transition: background-color var(--dur-short) var(--ease-out),
+                    border-color var(--dur-short) var(--ease-out),
+                    color var(--dur-short) var(--ease-out),
+                    transform var(--dur-short) var(--ease-out);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .btn-primary:hover { background: var(--focus); transform: translateY(-1px); }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--rule);
+      }
+      .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+      .btn-large { padding: 18px 32px; font-size: 15px; }
+      .cta-micro {
+        display: block;
+        margin-top: 14px;
+        color: var(--ink-3);
+        font-size: 13px;
+        letter-spacing: 0;
+      }
+
+      /* ───────────────────────── Trust strip ───────────────────────── */
+      .trust {
+        padding: 28px 0 0;
+      }
+      .trust-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px 32px;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 28px 0;
+        border-top: 1px solid var(--rule-soft);
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      .trust-cell {
+        text-align: center;
+        min-width: 0;
+      }
+      .trust-cell .n {
+        font-family: var(--font-heading);
+        font-size: clamp(22px, 2.5vw, 28px);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+      }
+      .trust-cell .l {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-top: 4px;
+      }
+      @media (max-width: 700px) {
+        .trust-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+      }
+
+      /* ───────────────────────── Section primitives ───────────────────────── */
+      section.s {
+        padding: 110px 0;
+        position: relative;
+      }
+      section.s.tight { padding: 80px 0; }
+      .section-head {
+        max-width: 720px;
+        margin: 0 auto 56px;
+        text-align: center;
+      }
+      .section-head .mono { display: block; margin-bottom: 16px; }
+      .section-head h2 {
+        font-size: clamp(32px, 4.4vw, 52px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+        margin-bottom: 16px;
+      }
+      .section-head h2 em { font-style: normal; color: var(--accent); }
+      .section-head p {
+        color: var(--ink-2);
+        font-size: 17px;
+        line-height: 1.55;
+        max-width: 56ch;
+        margin: 0 auto;
+      }
+
+      /* ───────────────────────── Problem ───────────────────────── */
+      .problem {
+        background: var(--paper-2);
+        border-top: 1px solid var(--rule-soft);
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .problem-card {
+        padding: 28px;
+        background: var(--paper);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+      }
+      .problem-card .strike {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 12px;
+      }
+      .problem-card h3 {
+        font-size: 19px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .problem-card p { color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
+      @media (max-width: 900px) { .problem-grid { grid-template-columns: 1fr; } }
+
+      /* ───────────────────────── How it works (3 steps) ───────────────────────── */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .step {
+        padding: 44px 32px 36px;
+        background: oklch(11% 0.018 220 / 0.7);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        text-align: left;
+        backdrop-filter: blur(6px);
+        transition: border-color var(--dur-short) var(--ease-out),
+                    background-color var(--dur-short) var(--ease-out);
+        position: relative;
+      }
+      .step:hover {
+        border-color: var(--rule);
+        background: oklch(13% 0.020 220 / 0.78);
+      }
+      .step .icon {
+        width: 48px; height: 48px;
+        display: inline-flex; align-items: center; justify-content: center;
+        color: var(--accent);
+        border: 1px solid var(--rule-soft);
+        border-radius: 10px;
+        margin-bottom: 8px;
+      }
+      .step .icon svg { width: 24px; height: 24px; }
+      .step .step-n {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+      .step h3 {
+        font-size: clamp(22px, 2.2vw, 28px);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      .step p { color: var(--ink-2); font-size: 15px; line-height: 1.55; }
+      @media (max-width: 1023px) { .steps { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 639px) { .steps { grid-template-columns: 1fr; } }
+
+      /* ───────────────────────── Proof ───────────────────────── */
+      .proof {
+        background: var(--paper-2);
+        border-top: 1px solid var(--rule-soft);
+      }
+      .proof-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr 1fr;
+        gap: 20px;
+      }
+      .testimonial {
+        background: var(--paper-3);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .testimonial.featured {
+        background: linear-gradient(180deg, oklch(14% 0.020 220) 0%, oklch(11% 0.018 220) 100%);
+        border: 1px solid var(--rule);
+      }
+      .testimonial blockquote {
+        margin: 0;
+        font-size: clamp(16px, 1.4vw, 18px);
+        line-height: 1.5;
+        color: var(--ink);
+        font-weight: 500;
+        letter-spacing: -0.005em;
+      }
+      .testimonial.featured blockquote {
+        font-size: clamp(18px, 1.8vw, 22px);
+        line-height: 1.45;
+      }
+      .testimonial .person {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+      }
+      .testimonial .avatar {
+        width: 44px; height: 44px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: var(--paper);
+        border: 1px solid var(--rule-soft);
+        flex: none;
+      }
+      .testimonial .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+      .testimonial .avatar-fallback {
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--accent);
+        background: oklch(15% 0.030 215);
+      }
+      .testimonial .meta { font-size: 13.5px; line-height: 1.35; }
+      .testimonial .meta strong { color: var(--ink); font-weight: 600; }
+      .testimonial .meta div { color: var(--ink-3); margin-top: 2px; font-size: 12.5px; }
+      .testimonial .outcome {
+        display: inline-flex;
+        gap: 6px;
+        align-self: flex-start;
+        padding: 6px 10px;
+        background: oklch(20% 0.05 215);
+        color: var(--accent);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: var(--radius-input);
+        border: 1px solid oklch(40% 0.08 215 / 0.3);
+      }
+      @media (max-width: 1023px) { .proof-grid { grid-template-columns: 1fr 1fr; }
+        .testimonial.featured { grid-column: 1 / -1; }
+      }
+      @media (max-width: 639px) { .proof-grid { grid-template-columns: 1fr; }
+        .testimonial.featured { grid-column: auto; }
+      }
+
+      /* ───────────────────────── Features ───────────────────────── */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .feature {
+        padding: 28px 24px;
+        background: var(--paper-2);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+      }
+      .feature .icon {
+        width: 36px; height: 36px;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+      .feature p { color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+      @media (max-width: 900px) { .features { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 520px) { .features { grid-template-columns: 1fr; } }
+
+      /* ───────────────────────── Soft CTA (fit-check) ───────────────────────── */
+      .soft {
+        padding: 80px 0;
+        background: var(--paper-2);
+        border-top: 1px solid var(--rule-soft);
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      .soft-inner {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 var(--gutter);
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 56px;
+        align-items: center;
+      }
+      .soft .kicker { display: block; margin-bottom: 14px; }
+      .soft h2 {
+        font-size: clamp(28px, 3.4vw, 42px);
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
+        margin-bottom: 14px;
+        max-width: 16ch;
+      }
+      .soft .sub { color: var(--ink-2); font-size: 16px; line-height: 1.55; max-width: 42ch; }
+      .soft form { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+      .soft input[type="email"] {
+        padding: 14px 16px;
+        background: var(--paper);
+        border: 1px solid var(--rule);
+        border-radius: var(--radius-input);
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: 15px;
+        outline: none;
+      }
+      .soft input[type="email"]:focus-visible {
+        border-color: var(--accent);
+        outline: 2px solid var(--focus);
+        outline-offset: 0;
+      }
+      .soft input[type="email"]::placeholder { color: var(--ink-3); }
+      .soft button {
+        padding: 14px 20px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        border: 0;
+        border-radius: 50px;
+        font-family: var(--font-heading);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color var(--dur-short) var(--ease-out);
+      }
+      .soft button:hover { background: var(--focus); }
+      .soft .micro { color: var(--ink-3); font-size: 12px; margin-top: 4px; }
+      .soft .success {
+        margin-top: 14px;
+        padding: 14px 16px;
+        background: oklch(20% 0.05 215);
+        border: 1px solid oklch(40% 0.08 215 / 0.3);
+        border-radius: var(--radius-input);
+        font-size: 14px; line-height: 1.45;
+      }
+      @media (max-width: 767px) { .soft-inner { grid-template-columns: 1fr; gap: 32px; } }
+
+      /* ───────────────────────── FAQ ───────────────────────── */
+      .faq-list {
+        max-width: 820px;
+        margin: 0 auto;
+        border-top: 1px solid var(--rule-soft);
+      }
+      details {
+        border-bottom: 1px solid var(--rule-soft);
+        padding: 22px 0;
+      }
+      details summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-size: 17px;
+        font-weight: 500;
+        letter-spacing: -0.015em;
+        color: var(--ink);
+      }
+      details summary::-webkit-details-marker { display: none; }
+      details summary::after {
+        content: "+";
+        font-family: var(--font-mono);
+        font-size: 22px;
+        color: var(--accent);
+        transition: transform var(--dur-short) var(--ease-out);
+        flex: none;
+      }
+      details[open] summary::after { content: "−"; }
+      details p {
+        margin-top: 14px;
+        color: var(--ink-2);
+        font-size: 15.5px;
+        line-height: 1.6;
+        max-width: 68ch;
+      }
+
+      /* ───────────────────────── Booking (closing CTA + calendar) ───────────────────────── */
+      .booking {
+        padding: 110px 0 96px;
+        text-align: center;
+        position: relative;
+        background:
+          radial-gradient(50% 50% at 50% 0%, oklch(18% 0.06 215 / 0.4), transparent 70%),
+          var(--paper);
+      }
+      .booking h2 {
+        font-size: clamp(34px, 5vw, 56px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        max-width: 18ch;
+        margin: 0 auto 18px;
+      }
+      .booking h2 em { font-style: normal; color: var(--accent); }
+      .booking .sub {
+        max-width: 56ch;
+        margin: 0 auto 32px;
+        color: var(--ink-2);
+        font-size: 17px;
+      }
+      .booking-frame {
+        margin: 40px auto 0;
+        max-width: 980px;
+        min-height: 720px;
+        background: var(--paper-2);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+      }
+      .booking-frame iframe {
+        width: 100%;
+        min-height: 720px;
+        border: 0;
+        display: block;
+      }
+      .booking-fallback {
+        margin: 24px auto 0;
+        max-width: 640px;
+        padding: 24px;
+        text-align: center;
+        background: var(--paper-2);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+      }
+      .booking-fallback h3 { font-size: 20px; margin-bottom: 8px; }
+      .booking-fallback p { color: var(--ink-2); font-size: 14px; margin-bottom: 16px; }
+
+      /* ───────────────────────── Footer (Ft5 statement) ───────────────────────── */
+      footer.ft {
+        padding: 88px var(--gutter) 56px;
+        background: var(--paper);
+        border-top: 1px solid var(--rule-soft);
+      }
+      .ft-inner { max-width: var(--max-w); margin: 0 auto; }
+      .ft .statement {
+        font-size: clamp(28px, 4.6vw, 56px);
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+        margin: 0 0 64px;
+        max-width: 22ch;
+      }
+      .ft .statement .mark {
+        font-family: var(--font-mono);
+        font-size: 0.45em;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+        vertical-align: 0.55em;
+        margin-left: 0.4em;
+        text-transform: uppercase;
+      }
+      .ft-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 18px 28px;
+        padding-top: 24px;
+        border-top: 1px solid var(--rule-soft);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--ink-2);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .ft-meta-links { display: flex; gap: 24px; flex-wrap: wrap; }
+      .ft-meta a { color: var(--ink-2); text-decoration: none; }
+      .ft-meta a:hover { color: var(--ink); }
+
+      /* ───────────────────────── Accessibility ───────────────────────── */
+      .vh {
+        position: absolute; width: 1px; height: 1px;
+        margin: -1px; padding: 0; border: 0;
+        overflow: hidden; clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          transition-duration: 0.001ms !important;
+        }
+        html { scroll-behavior: auto; }
+      }
+
+      /* ───────────────────────── Transparent surfaces override ─────────────────────────
+         Drop the solid section bands so the animated WebGL trails are visible behind
+         the entire page as the user scrolls. Every card becomes a frosted-glass tile
+         (translucent fill + backdrop blur) so text stays legible on top of motion. */
+      .problem,
+      .proof,
+      .soft {
+        background: transparent;
+      }
+      .booking {
+        background: radial-gradient(50% 50% at 50% 0%, oklch(18% 0.06 215 / 0.35), transparent 70%);
+      }
+      footer.ft {
+        background: oklch(8% 0.015 220 / 0.55);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .problem-card,
+      .feature,
+      .booking-frame,
+      .booking-fallback {
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .step {
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .step:hover {
+        background: oklch(13% 0.020 220 / 0.65);
+      }
+      .testimonial {
+        background: oklch(14% 0.020 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .testimonial.featured {
+        background: linear-gradient(180deg, oklch(14% 0.020 220 / 0.65) 0%, oklch(11% 0.018 220 / 0.55) 100%);
+      }
+
+      /* Unified card hover — every frosted tile lifts, glows, gets a top
+         accent line, and runs a diagonal shine sweep under the cursor */
+      .problem-card,
+      .feature,
+      .testimonial,
+      .booking-card,
+      .founder-side-card,
+      .step {
+        position: relative;
+        overflow: hidden;
+        transition: border-color 320ms var(--ease-out),
+                    background-color 320ms var(--ease-out),
+                    transform 420ms var(--ease-out),
+                    box-shadow 420ms var(--ease-out);
+        will-change: transform;
+      }
+
+      /* Animated top accent line — grows from center on hover */
+      .problem-card::before,
+      .feature::before,
+      .testimonial::before,
+      .booking-card::before,
+      .founder-side-card::before,
+      .step::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          oklch(82% 0.150 215 / 0) 20%,
+          var(--accent) 50%,
+          oklch(82% 0.150 215 / 0) 80%,
+          transparent 100%);
+        transform: scaleX(0);
+        transform-origin: center;
+        opacity: 0;
+        transition: transform 520ms var(--ease-out), opacity 320ms var(--ease-out);
+        pointer-events: none;
+        z-index: 2;
+      }
+      .problem-card:hover::before,
+      .feature:hover::before,
+      .testimonial:hover::before,
+      .booking-card:hover::before,
+      .founder-side-card:hover::before,
+      .step:hover::before {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+
+      /* Diagonal shine sweep */
+      .problem-card::after,
+      .feature::after,
+      .testimonial::after,
+      .booking-card::after,
+      .founder-side-card::after,
+      .step::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 70%;
+        height: 100%;
+        background: linear-gradient(110deg,
+          transparent 30%,
+          oklch(82% 0.150 215 / 0.07) 50%,
+          transparent 70%);
+        transition: left 900ms var(--ease-out);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .problem-card:hover::after,
+      .feature:hover::after,
+      .testimonial:hover::after,
+      .booking-card:hover::after,
+      .founder-side-card:hover::after,
+      .step:hover::after {
+        left: 140%;
+      }
+
+      /* Lift + accent glow shadow */
+      .problem-card:hover,
+      .feature:hover,
+      .booking-card:hover {
+        border-color: oklch(50% 0.06 215 / 0.55);
+        background: oklch(13% 0.020 220 / 0.7);
+        transform: translateY(-5px) scale(1.005);
+        box-shadow:
+          0 18px 40px -16px oklch(0% 0 0 / 0.55),
+          0 0 28px -12px oklch(82% 0.150 215 / 0.35);
+      }
+      .testimonial:hover {
+        border-color: oklch(50% 0.06 215 / 0.55);
+        background: oklch(16% 0.022 220 / 0.7);
+        transform: translateY(-5px) scale(1.005);
+        box-shadow:
+          0 18px 40px -16px oklch(0% 0 0 / 0.55),
+          0 0 28px -12px oklch(82% 0.150 215 / 0.35);
+      }
+      .testimonial.featured:hover {
+        background: linear-gradient(180deg, oklch(16% 0.022 220 / 0.8) 0%, oklch(13% 0.020 220 / 0.7) 100%);
+      }
+      .founder-side-card:hover {
+        border-color: oklch(50% 0.06 215 / 0.55);
+        background: oklch(13% 0.020 220 / 0.7);
+        transform: translateY(-5px) scale(1.005);
+        box-shadow:
+          0 18px 40px -16px oklch(0% 0 0 / 0.55),
+          0 0 28px -12px oklch(82% 0.150 215 / 0.35);
+      }
+      .step:hover {
+        transform: translateY(-5px) scale(1.005);
+        box-shadow:
+          0 18px 40px -16px oklch(0% 0 0 / 0.55),
+          0 0 28px -12px oklch(82% 0.150 215 / 0.35);
+      }
+      .problem-card.featured:hover {
+        background: linear-gradient(180deg, oklch(17% 0.05 215 / 0.8) 0%, oklch(13% 0.020 220 / 0.7) 100%);
+        border-color: oklch(55% 0.13 215 / 0.7);
+        box-shadow:
+          0 18px 40px -14px oklch(0% 0 0 / 0.55),
+          0 0 36px -10px oklch(82% 0.150 215 / 0.45);
+      }
+
+      /* Inner icon animations */
+      .step .icon,
+      .feature .icon {
+        transition: transform 420ms var(--ease-out),
+                    color 320ms var(--ease-out),
+                    border-color 320ms var(--ease-out);
+      }
+      .step:hover .icon {
+        transform: scale(1.1) rotate(-4deg);
+        color: var(--focus);
+        border-color: oklch(82% 0.150 215 / 0.5);
+      }
+      .feature:hover .icon {
+        transform: scale(1.15) translateY(-2px);
+        color: var(--focus);
+      }
+
+      /* Lift inner headings subtly to reinforce depth */
+      .problem-card h3,
+      .feature h4,
+      .booking-card h3,
+      .founder-side-card h4,
+      .step h3 {
+        transition: color 320ms var(--ease-out), letter-spacing 420ms var(--ease-out);
+      }
+      .problem-card:hover h3,
+      .feature:hover h4,
+      .booking-card:hover h3,
+      .founder-side-card:hover h4,
+      .step:hover h3 {
+        color: var(--ink);
+        letter-spacing: -0.018em;
+      }
+
+      /* Brighten paragraph + body text on hover so every word is fully legible */
+      .problem-card p,
+      .feature p,
+      .step p,
+      .testimonial blockquote,
+      .testimonial cite,
+      .booking-card li,
+      .booking-card p,
+      .founder-side-card p,
+      .founder-side-card li {
+        transition: color 320ms var(--ease-out);
+      }
+      .problem-card:hover p,
+      .feature:hover p,
+      .step:hover p,
+      .testimonial:hover blockquote,
+      .testimonial:hover cite,
+      .booking-card:hover li,
+      .booking-card:hover p,
+      .founder-side-card:hover p,
+      .founder-side-card:hover li {
+        color: var(--ink);
+      }
+
+      /* Respect users who prefer reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .problem-card, .feature, .testimonial, .booking-card,
+        .founder-side-card, .step,
+        .problem-card::before, .feature::before, .testimonial::before,
+        .booking-card::before, .founder-side-card::before, .step::before,
+        .problem-card::after, .feature::after, .testimonial::after,
+        .booking-card::after, .founder-side-card::after, .step::after,
+        .step .icon, .feature .icon {
+          transition: none !important;
+        }
+        .problem-card:hover, .feature:hover, .testimonial:hover,
+        .booking-card:hover, .founder-side-card:hover, .step:hover {
+          transform: none !important;
+        }
+      }
+
+      /* Soft CTA form becomes a frosted card next to the pitch text */
+      .soft form {
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: var(--radius-card);
+        border: 1px solid var(--rule-soft);
+        padding: 24px;
+      }
+      .soft input[type="email"] {
+        background: oklch(8% 0.015 220 / 0.75);
+      }
+
+      /* FAQ list as one frosted slab; remove duplicate bottom rule on last item */
+      .faq-list {
+        background: oklch(11% 0.018 220 / 0.45);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: var(--radius-card);
+        border: 1px solid var(--rule-soft);
+        padding: 0 28px;
+      }
+      .faq-list details:last-of-type {
+        border-bottom: 0;
+      }
+
+      /* Drop the hero's bottom fade — sections below are no longer opaque, so the
+         fade would dissolve into nothing. Trails should flow continuously instead. */
+      .hero::after { display: none; }
+
+      /* ───────────────────────── Components added for the original-content rebuild ───────────────────────── */
+
+      /* Small btn variant + featured card in The Shift */
+      .btn-small { padding: 10px 18px; font-size: 12px; }
+      .problem-card.featured {
+        background: linear-gradient(180deg, oklch(15% 0.04 215 / 0.65) 0%, oklch(11% 0.018 220 / 0.55) 100%);
+        border-color: oklch(40% 0.10 215 / 0.45);
+      }
+      .problem-card.featured .btn { align-self: flex-start; margin-top: 8px; }
+      .strike-accent { color: var(--accent) !important; }
+
+      /* The Funnel: 3-col grid with two wide spans (Pull + Keep) */
+      .steps-funnel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .steps-funnel .step-wide { grid-column: span 2; }
+      @media (max-width: 1023px) {
+        .steps-funnel { grid-template-columns: 1fr 1fr; }
+        .steps-funnel .step-wide { grid-column: auto; }
+      }
+      @media (max-width: 639px) {
+        .steps-funnel { grid-template-columns: 1fr; }
+      }
+
+      /* The 30 Day Promise card */
+      .promise-card {
+        max-width: 900px;
+        margin: 0 auto;
+        border: 1px solid var(--rule);
+        border-radius: var(--radius-card);
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        overflow: hidden;
+      }
+      .promise-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        padding: 18px 28px;
+        border-bottom: 1px solid var(--rule-soft);
+        background: oklch(14% 0.020 220 / 0.35);
+      }
+      .promise-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: var(--ink);
+      }
+      .promise-toggle {
+        position: relative;
+        width: 34px; height: 18px;
+        background: var(--accent);
+        border-radius: 999px;
+        flex: none;
+      }
+      .promise-toggle::after {
+        content: "";
+        position: absolute;
+        width: 14px; height: 14px;
+        background: var(--paper);
+        border-radius: 999px;
+        top: 2px; right: 2px;
+      }
+      .promise-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+      @keyframes atomPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.35; }
+      }
+      .promise-live .dot { animation: atomPulse 1.6s infinite; }
+      .promise-rows { display: flex; flex-direction: column; }
+      .promise-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px 28px;
+        border-bottom: 1px solid var(--rule-soft);
+        transition: background-color var(--dur-short) var(--ease-out);
+      }
+      .promise-row:last-child { border-bottom: 0; }
+      .promise-row:hover { background: oklch(14% 0.020 220 / 0.3); }
+      .promise-row-title { font-size: 14.5px; font-weight: 500; color: var(--ink); }
+      .promise-row-sub {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-top: 4px;
+      }
+      .promise-row-value { text-align: right; flex: none; }
+      .promise-num {
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        line-height: 1.1;
+      }
+      .promise-sub {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: var(--ink-3);
+        text-transform: uppercase;
+        margin-top: 4px;
+      }
+      .promise-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 20px;
+        flex-wrap: wrap;
+        padding: 18px 28px;
+        background: oklch(8% 0.015 220 / 0.4);
+        border-top: 1px solid var(--rule-soft);
+      }
+      .promise-footer p {
+        margin: 0;
+        font-size: 11.5px;
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        letter-spacing: 0.04em;
+        line-height: 1.55;
+        max-width: 60ch;
+      }
+      @media (max-width: 600px) {
+        .promise-row { flex-direction: column; align-items: flex-start; }
+        .promise-row-value { text-align: left; }
+      }
+
+      /* Testimonial enhancements (summary line, big-num block, bullet list) */
+      .testimonial .t-summary {
+        font-size: 14.5px;
+        color: var(--ink-2);
+        line-height: 1.5;
+        margin: 0;
+      }
+      .testimonial blockquote {
+        font-style: italic;
+        color: var(--ink);
+      }
+      .testimonial .t-bignum {
+        padding: 18px 0;
+        border-top: 1px solid var(--rule-soft);
+        border-bottom: 1px solid var(--rule-soft);
+      }
+      .testimonial .t-bignum-n {
+        font-family: var(--font-heading);
+        font-size: clamp(36px, 4vw, 48px);
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        color: var(--ink);
+      }
+      .testimonial .t-bignum-l {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-top: 8px;
+      }
+      .testimonial .t-bullets {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .testimonial .t-bullets li {
+        position: relative;
+        padding-left: 22px;
+        font-size: 13.5px;
+        color: var(--ink-2);
+        line-height: 1.45;
+      }
+      .testimonial .t-bullets li::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 7px;
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--ink-3);
+        border-radius: 999px;
+      }
+      .testimonial .t-bullets-accent li::before {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* Founder section: photo + body main column, two side cards */
+      .founder {
+        padding-top: 110px;
+        padding-bottom: 110px;
+      }
+      .founder-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin: 0 auto 48px;
+        text-align: left;
+        max-width: var(--max-w);
+        padding: 0 var(--gutter);
+      }
+      .founder-head .mono { display: block; margin-bottom: 14px; }
+      .founder-head h2 {
+        font-size: clamp(32px, 4.4vw, 52px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+      .founder-head h2 em { font-style: normal; color: var(--accent); }
+      .founder-grid {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 0 var(--gutter);
+        display: grid;
+        grid-template-columns: 2.4fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .founder-main { display: flex; flex-direction: column; gap: 24px; }
+      .founder-photo {
+        width: 100%;
+        aspect-ratio: 4/5;
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        border: 1px solid var(--rule-soft);
+        background: var(--paper-2);
+      }
+      .founder-photo img {
+        width: 100%; height: 100%;
+        object-fit: contain;
+        object-position: center;
+        transition: transform 700ms var(--ease-out);
+      }
+      .founder-photo:hover img { transform: scale(1.03); }
+      .founder-body { display: flex; flex-direction: column; gap: 14px; }
+      .founder-body h3 {
+        font-size: clamp(22px, 2.4vw, 30px);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--ink);
+      }
+      .founder-body p {
+        color: var(--ink-2);
+        font-size: 15.5px;
+        line-height: 1.65;
+        max-width: 64ch;
+      }
+      .founder-body .btn { align-self: flex-start; margin-top: 8px; }
+      .founder-side { display: flex; flex-direction: column; gap: 14px; }
+      .founder-side-photo {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        border: 1px solid var(--rule-soft);
+        background: var(--paper-2);
+      }
+      .founder-side-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 700ms var(--ease-out);
+      }
+      .founder-side-photo:hover img { transform: scale(1.04); }
+      .founder-side-card {
+        padding: 18px 20px;
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: border-color var(--dur-short) var(--ease-out),
+                    background-color var(--dur-short) var(--ease-out),
+                    transform var(--dur-short) var(--ease-out);
+      }
+      .founder-side-card .mono { font-size: 10px; }
+      .founder-side-card:hover { border-color: var(--rule); }
+      .founder-side-card h4 {
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.012em;
+        line-height: 1.25;
+        color: var(--ink);
+      }
+      .founder-side-card p { font-size: 13px; line-height: 1.5; }
+      .founder-side-card .link-arrow { font-size: 10px; margin-top: 4px; }
+      .mono-mute { color: var(--ink-3) !important; }
+      .mono-accent { color: var(--accent) !important; }
+      .link-arrow {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-decoration: none;
+        margin-top: auto;
+        transition: color var(--dur-short) var(--ease-out);
+      }
+      .link-arrow:hover { color: var(--focus); }
+      @media (max-width: 900px) {
+        .founder-grid { grid-template-columns: 1fr; }
+        .founder-side { flex-direction: row; flex-wrap: wrap; }
+        .founder-side-photo { flex: 1 1 100%; }
+      }
+      @media (max-width: 600px) {
+        .founder-side { flex-direction: column; }
+      }
+
+      /* Booking section: split grid with calendar + asides */
+      .booking-grid {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+        text-align: left;
+      }
+      .booking-main { min-width: 0; display: flex; flex-direction: column; }
+      .booking-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 18px;
+        background: oklch(11% 0.018 220 / 0.75);
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink-2);
+      }
+      .booking-pulse {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+      }
+      .booking-update { color: var(--ink-3); }
+      .dot {
+        display: inline-block;
+        width: 8px; height: 8px;
+        background: var(--accent);
+        border-radius: 999px;
+      }
+      .dot-pulse { animation: atomPulse 1.6s infinite; }
+      .booking-grid .booking-frame {
+        margin: 0;
+        border-radius: 0 0 var(--radius-card) var(--radius-card);
+        border-top: 0;
+        min-height: 720px;
+      }
+      .booking-aside { display: flex; flex-direction: column; gap: 16px; }
+      .booking-card {
+        padding: 24px;
+        border: 1px solid var(--rule-soft);
+        border-radius: var(--radius-card);
+        background: oklch(11% 0.018 220 / 0.55);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .booking-card h3 {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 14px;
+        color: var(--ink);
+      }
+      .booking-card ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .booking-card li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--ink-2);
+      }
+      .booking-card .b-bullet {
+        color: var(--accent);
+        font-size: 11px;
+        line-height: 1.7;
+        flex: none;
+        width: 14px;
+      }
+      .booking-card .b-bullet.check { font-weight: 700; font-size: 13px; }
+      @media (max-width: 900px) {
+        .booking-grid { grid-template-columns: 1fr; }
+      }
+
+      /* ═════════ Awesome Calendar Frame ═════════ */
+      .booking-main {
+        position: relative;
+        padding: 1.5px;
+        border-radius: calc(var(--radius-card) + 1px);
+        background:
+          linear-gradient(135deg,
+            oklch(82% 0.150 215 / 0.55) 0%,
+            oklch(50% 0.06  215 / 0.25) 30%,
+            oklch(40% 0.020 220 / 0.18) 50%,
+            oklch(50% 0.06  215 / 0.25) 70%,
+            oklch(82% 0.150 215 / 0.55) 100%);
+        background-size: 300% 300%;
+        animation:
+          bookingBorderFlow 9s ease-in-out infinite,
+          bookingHaloPulse  5s ease-in-out infinite;
+        box-shadow:
+          0 30px 70px -24px oklch(0% 0 0 / 0.55),
+          0 0 60px -10px oklch(82% 0.150 215 / 0.25),
+          0 0 120px -20px oklch(82% 0.150 215 / 0.18);
+      }
+      @keyframes bookingBorderFlow {
+        0%, 100% { background-position: 0% 50%; }
+        50%      { background-position: 100% 50%; }
+      }
+      @keyframes bookingHaloPulse {
+        0%, 100% {
+          box-shadow:
+            0 30px 70px -24px oklch(0% 0 0 / 0.55),
+            0 0 60px -10px oklch(82% 0.150 215 / 0.25),
+            0 0 120px -20px oklch(82% 0.150 215 / 0.18);
+        }
+        50% {
+          box-shadow:
+            0 30px 70px -24px oklch(0% 0 0 / 0.55),
+            0 0 80px -6px  oklch(82% 0.150 215 / 0.38),
+            0 0 160px -16px oklch(82% 0.150 215 / 0.28);
+        }
+      }
+
+      /* Inner solid layer turns the animated gradient into a thin border */
+      .booking-main::before {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: var(--radius-card);
+        background: var(--paper);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .booking-main > .booking-status,
+      .booking-main > .booking-frame { position: relative; z-index: 1; }
+
+      /* Status bar — premium glass strip */
+      .booking-grid .booking-status {
+        background: linear-gradient(180deg,
+          oklch(14% 0.025 220 / 0.92) 0%,
+          oklch(10% 0.015 220 / 0.85) 100%);
+        border: 0;
+        border-bottom: 1px solid oklch(40% 0.06 215 / 0.35);
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        position: relative;
+        overflow: hidden;
+        font-size: 11px;
+        color: var(--ink);
+      }
+
+      /* Animated scan line at the bottom of the status bar */
+      .booking-grid .booking-status::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: -50%;
+        width: 50%;
+        height: 1px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          var(--accent) 50%,
+          transparent 100%);
+        animation: bookingScan 3.6s cubic-bezier(0.55, 0, 0.45, 1) infinite;
+        pointer-events: none;
+      }
+      @keyframes bookingScan {
+        0%   { left: -50%; opacity: 0; }
+        15%  { opacity: 1; }
+        85%  { opacity: 1; }
+        100% { left: 100%; opacity: 0; }
+      }
+
+      .booking-pulse {
+        color: var(--ink);
+        text-shadow: 0 0 14px oklch(82% 0.150 215 / 0.45);
+        font-weight: 500;
+      }
+      .booking-pulse .dot {
+        width: 9px;
+        height: 9px;
+        background: var(--accent);
+        box-shadow:
+          0 0 0 4px oklch(82% 0.150 215 / 0.18),
+          0 0 14px oklch(82% 0.150 215 / 0.9);
+      }
+
+      /* Calendar frame — clean inner panel, no double border */
+      .booking-grid .booking-frame {
+        background: oklch(7% 0.012 220);
+        border: 0;
+        border-radius: 0 0 var(--radius-card) var(--radius-card);
+        box-shadow:
+          inset 0 1px 0 oklch(40% 0.06 215 / 0.18),
+          inset 0 0 0 1px oklch(40% 0.020 220 / 0.15);
+        overflow: hidden;
+      }
+
+      /* Corner brackets — futuristic targeting reticule */
+      .booking-main .corner {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        pointer-events: none;
+        z-index: 3;
+        opacity: 0.95;
+        filter: drop-shadow(0 0 6px oklch(82% 0.150 215 / 0.6));
+      }
+      .booking-main .corner::before,
+      .booking-main .corner::after {
+        content: "";
+        position: absolute;
+        background: var(--accent);
+        border-radius: 1px;
+      }
+      .booking-main .corner::before { width: 100%; height: 2px; }
+      .booking-main .corner::after  { width: 2px;  height: 100%; }
+      .booking-main .corner-tl { top: -6px; left:  -6px; }
+      .booking-main .corner-tl::before { top: 0;    left: 0; }
+      .booking-main .corner-tl::after  { top: 0;    left: 0; }
+      .booking-main .corner-tr { top: -6px; right: -6px; }
+      .booking-main .corner-tr::before { top: 0;    right: 0; }
+      .booking-main .corner-tr::after  { top: 0;    right: 0; }
+      .booking-main .corner-bl { bottom: -6px; left:  -6px; }
+      .booking-main .corner-bl::before { bottom: 0; left: 0; }
+      .booking-main .corner-bl::after  { bottom: 0; left: 0; }
+      .booking-main .corner-br { bottom: -6px; right: -6px; }
+      .booking-main .corner-br::before { bottom: 0; right: 0; }
+      .booking-main .corner-br::after  { bottom: 0; right: 0; }
+
+      /* Subtle drift on the corners so they feel alive */
+      .booking-main .corner { animation: cornerBreath 4s ease-in-out infinite; }
+      .booking-main .corner-tr { animation-delay: 0.4s; }
+      .booking-main .corner-bl { animation-delay: 0.8s; }
+      .booking-main .corner-br { animation-delay: 1.2s; }
+      @keyframes cornerBreath {
+        0%, 100% { opacity: 0.95; filter: drop-shadow(0 0 6px  oklch(82% 0.150 215 / 0.6)); }
+        50%      { opacity: 1;    filter: drop-shadow(0 0 12px oklch(82% 0.150 215 / 0.9)); }
+      }
+
+      @media (max-width: 900px) {
+        .booking-main .corner { width: 16px; height: 16px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .booking-main,
+        .booking-grid .booking-status::before,
+        .booking-main .corner {
+          animation: none !important;
+        }
+      }
+
+      /* Footer accent on statement em */
+      .ft .statement em { font-style: normal; color: var(--accent); }
+
+      /* ═════════════ Scroll-reveal: slide in / slide out ═════════════
+         Elements slide in from below as they enter the viewport, and
+         slide out upward as they leave (and vice-versa on scroll up).
+         Uses `translate`/`opacity` only — no blur, no scale — for a
+         clean directional motion. */
+      [data-reveal] {
+        opacity: 0;
+        translate: 0 64px;
+        transition:
+          opacity   700ms var(--ease-out),
+          translate 800ms var(--ease-out);
+        transition-delay: var(--reveal-delay, 0ms);
+        will-change: opacity, translate;
+      }
+      [data-reveal].is-below { opacity: 0; translate: 0  64px; }
+      [data-reveal].is-above { opacity: 0; translate: 0 -64px; }
+
+      [data-reveal="left"]          { opacity: 0; translate: -72px 0;   }
+      [data-reveal="left"].is-below { opacity: 0; translate: -56px 36px; }
+      [data-reveal="left"].is-above { opacity: 0; translate: -56px -36px; }
+
+      [data-reveal="right"]          { opacity: 0; translate: 72px 0;   }
+      [data-reveal="right"].is-below { opacity: 0; translate: 56px 36px; }
+      [data-reveal="right"].is-above { opacity: 0; translate: 56px -36px; }
+
+      [data-reveal].is-visible {
+        opacity: 1;
+        translate: 0 0;
+      }
+
+      /* ═════════════ Mobile polish ═════════════ */
+
+      /* Prevent the calendar's corner brackets / decorative shadows
+         from triggering a horizontal scrollbar on narrow viewports. */
+      html, body { overflow-x: hidden; }
+
+      /* Themed hamburger — matches the calendar / nav language */
+      .hamburger {
+        background:
+          linear-gradient(135deg,
+            oklch(82% 0.150 215 / 0.55) 0%,
+            oklch(50% 0.06  215 / 0.20) 50%,
+            oklch(82% 0.150 215 / 0.55) 100%);
+        background-size: 200% 200%;
+        animation: navBorderFlow 9s ease-in-out infinite;
+        border: 0;
+        padding: 1.5px;
+        position: fixed;
+        box-shadow:
+          0 10px 28px -12px oklch(0% 0 0 / 0.6),
+          0 0 24px -8px oklch(82% 0.150 215 / 0.25);
+      }
+      .hamburger::before {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: 7px;
+        background: oklch(7% 0.012 220 / 0.85);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 0;
+      }
+      .hamburger svg {
+        position: relative;
+        z-index: 1;
+        transition: transform 320ms var(--ease-out);
+      }
+      .hamburger[aria-expanded="true"] svg { transform: rotate(90deg); }
+
+      /* Themed drawer */
+      .drawer {
+        background:
+          radial-gradient(80% 50% at 50% 0%, oklch(15% 0.04 215 / 0.7), transparent 70%),
+          oklch(7% 0.012 220 / 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 96px 22px 36px;
+        gap: 6px;
+      }
+      .drawer.open { display: flex; animation: drawerSlide 420ms var(--ease-out); }
+      @keyframes drawerSlide {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .drawer a:not(.cta) {
+        position: relative;
+        padding: 18px 14px;
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid oklch(40% 0.06 215 / 0.18);
+        opacity: 0;
+        transform: translateX(-16px);
+        animation: drawerLink 520ms var(--ease-out) forwards;
+        animation-delay: calc(120ms + var(--i, 0) * 70ms);
+      }
+      .drawer.open a:nth-of-type(1) { --i: 1; }
+      .drawer.open a:nth-of-type(2) { --i: 2; }
+      .drawer.open a:nth-of-type(3) { --i: 3; }
+      .drawer.open a:nth-of-type(4) { --i: 4; }
+      .drawer.open a:nth-of-type(5) { --i: 5; }
+      @keyframes drawerLink {
+        to { opacity: 1; transform: translateX(0); }
+      }
+      .drawer a:not(.cta)::before {
+        content: "›";
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-family: var(--font-mono);
+        font-size: 22px;
+        opacity: 0.6;
+        transition: transform 220ms var(--ease-out), opacity 220ms var(--ease-out);
+      }
+      .drawer a:not(.cta):hover::before,
+      .drawer a:not(.cta):active::before {
+        opacity: 1;
+        transform: translateY(-50%) translateX(4px);
+      }
+      .drawer a.cta {
+        margin-top: 22px;
+        padding: 16px 22px;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--focus) 100%);
+        box-shadow:
+          0 0 0 1px oklch(82% 0.150 215 / 0.4),
+          0 10px 26px -10px oklch(82% 0.150 215 / 0.8);
+      }
+
+      /* Make the booking-main animated border / glow more compact on mobile
+         so the calendar reads as the focus, not the chrome around it. */
+      @media (max-width: 600px) {
+        .booking-main {
+          box-shadow:
+            0 18px 40px -16px oklch(0% 0 0 / 0.55),
+            0 0 36px -8px oklch(82% 0.150 215 / 0.22);
+        }
+        .booking-main .corner { width: 14px; height: 14px; }
+        .booking-main .corner-tl { top: -4px; left: -4px; }
+        .booking-main .corner-tr { top: -4px; right: -4px; }
+        .booking-main .corner-bl { bottom: -4px; left: -4px; }
+        .booking-main .corner-br { bottom: -4px; right: -4px; }
+        .booking-grid .booking-status {
+          flex-direction: column;
+          gap: 6px;
+          align-items: flex-start;
+          padding: 12px 14px;
+        }
+      }
+
+      /* Tighter section paddings on mobile so the content breathes */
+      @media (max-width: 600px) {
+        section.s, section.soft, section.booking { padding-top: 64px; padding-bottom: 64px; }
+        .hero { padding-top: 110px; }
+        .section-head h2 { font-size: clamp(28px, 8vw, 38px); }
+        .booking h2 { font-size: clamp(30px, 8vw, 42px); }
+        .ft .statement { font-size: clamp(24px, 7vw, 36px); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Global atmospheric background: portrait image + WebGL trail animation. Sits behind all content. -->
+    <div class="bg-portrait" aria-hidden="true">
+      <img src="assets/discovery-bg.jpg" alt="" fetchpriority="high" />
+    </div>
+    <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+    <a href="#booking" class="vh">Skip to booking</a>
+
+    <!-- Floating-pill nav: 4 anchors + primary CTA. -->
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-mark" href="#top" aria-label="Atom — home">
+        <span class="nav-mark-dot" aria-hidden="true"></span>
+        <span class="nav-mark-text">ATOM</span>
+      </a>
+      <a href="#how"><span>How it works</span></a>
+      <a href="#fit-check"><span>Fit Check</span></a>
+      <a href="#proof"><span>Proof</span></a>
+      <a href="#faq"><span>FAQ</span></a>
+      <a href="#booking" class="cta">
+        <span>Book a call</span>
+        <svg class="cta-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="8" x2="13" y2="8"/>
+          <polyline points="8,3 13,8 8,13"/>
+        </svg>
+      </a>
+    </nav>
+
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <nav class="drawer" id="drawer" aria-hidden="true">
+      <a href="#how">How it works</a>
+      <a href="#fit-check">Fit Check</a>
+      <a href="#proof">Proof</a>
+      <a href="#faq">FAQ</a>
+      <a href="#booking" class="cta">Book a call</a>
+    </nav>
+
+    <!-- ───────────────────── Hero ───────────────────── -->
+    <header id="top" class="hero">
+      <div class="container">
+        <p class="mono kicker">01 · For online fitness coaches</p>
+        <h1>Be the coach <em>they call.</em></h1>
+        <p class="sub">
+          Atom turns your content into booked calls. Posts pull people in, the system filters them, a tailored conversation closes them. No pushy DMs, no scripts, no spam.
+        </p>
+        <div class="cta-row">
+          <a href="#booking" class="btn btn-primary btn-large">Book a discovery call</a>
+          <a href="#shift" class="btn btn-ghost btn-large">See how it works</a>
+        </div>
+        <span class="cta-micro">5+ booked calls in 30 days — or your next quarter is free.</span>
+      </div>
+
+      <div class="container trust">
+        <div class="trust-row">
+          <div class="trust-cell"><div class="n">5+ calls</div><div class="l">Booked in your first 30 days</div></div>
+          <div class="trust-cell"><div class="n">£1.4M+</div><div class="l">Closed by coaches running Atom</div></div>
+          <div class="trust-cell"><div class="n">128+</div><div class="l">Coaches served</div></div>
+          <div class="trust-cell"><div class="n">UK + PH</div><div class="l">Ops team behind every call</div></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ───────────────────── The Shift (Section 02) ───────────────────── -->
+    <section class="s problem" id="shift">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">02 · The Shift</span>
+          <h2>From posting and praying to <em>booked and ready.</em></h2>
+          <p>Three loud habits, three quiet wins.</p>
+        </div>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <div class="strike">Step 01</div>
+            <h3>Lead Activation</h3>
+            <p>Content cadence and a landing that filters — so the leads you talk to arrive warm instead of cold.</p>
+          </div>
+          <div class="problem-card featured">
+            <div class="strike strike-accent">Step 02 · The Atom Way</div>
+            <h3>AI Receptionist</h3>
+            <p>Always-on intake that qualifies, books, and routes the moment they land. You stop chasing replies; they show up ready.</p>
+          </div>
+          <div class="problem-card">
+            <div class="strike">Step 03</div>
+            <h3>Sales Lab</h3>
+            <p>A tailored discovery flow built around the lead's actual moment — not a script. The call earns the close instead of fighting for it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── The Funnel (Section 03) — 4 steps Pull/Filter/Listen/Keep ───────────────────── -->
+    <section class="s" id="how">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">03 · The Funnel</span>
+          <h2>Four steps. <em>One quiet engine.</em></h2>
+          <p>Each step earns the next. Nothing rushed, nothing salesy.</p>
+        </div>
+        <div class="steps steps-funnel">
+          <article class="step step-wide">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="14" height="12" rx="2"/>
+                <path d="m17 10 4-2v8l-4-2z"/>
+              </svg>
+            </div>
+            <span class="step-n">Step 01</span>
+            <h3>Pull — Content</h3>
+            <p>You post proof, not pitches. The right people start watching, saving, and quietly raising their hand.</p>
+          </article>
+          <article class="step">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 4h18l-7 9v6l-4 2v-8z"/>
+              </svg>
+            </div>
+            <span class="step-n">Step 02</span>
+            <h3>Filter — Landing</h3>
+            <p>The right people self-select on a page that does the screening for you.</p>
+          </article>
+          <article class="step">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/>
+              </svg>
+            </div>
+            <span class="step-n">Step 03</span>
+            <h3>Listen — Discovery</h3>
+            <p>Listen first. Map their bottleneck. No pitch on the call, just real conversation.</p>
+          </article>
+          <article class="step step-wide">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2 4 6v6c0 5 3.5 9.3 8 10 4.5-.7 8-5 8-10V6z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <span class="step-n">Step 04</span>
+            <h3>Keep — Fulfillment</h3>
+            <p>Five pillars run underneath. The lead never sees the work, they just feel taken care of. You stay the face.</p>
+          </article>
+        </div>
+        <div style="text-align:center; margin-top:48px;">
+          <a href="#booking" class="btn btn-primary">Map this onto my business</a>
+          <span class="cta-micro">We'll walk through your funnel on the call — no template decks.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Coach Voices (Section 05) ───────────────────── -->
+    <section class="s proof" id="proof">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">04 · Coach Voices</span>
+          <h2>What other coaches <em>said.</em></h2>
+        </div>
+        <div class="proof-grid">
+          <article class="testimonial">
+            <p class="t-summary">Content was getting views, no calls. After Atom, I just showed up ready.</p>
+            <blockquote>"...the right people booked themselves."</blockquote>
+            <ul class="t-bullets">
+              <li>2 yrs coaching online</li>
+              <li>Stopped chasing DMs</li>
+              <li>Right-fit calls only</li>
+              <li>Time back for clients</li>
+            </ul>
+            <div class="person">
+              <div class="avatar"><div class="avatar-fallback">SR</div></div>
+              <div class="meta">
+                <strong>Sasha R.</strong>
+                <div>Online nutrition coach</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial featured">
+            <span class="outcome">Deep Case Study</span>
+            <p class="t-summary">Stopped being a content machine and started being a coach again. Atom did the filtering. I just showed up to calls already qualified.</p>
+            <div class="t-bignum">
+              <div class="t-bignum-n">0 calls</div>
+              <div class="t-bignum-l">Before Atom · Posting 5x/week</div>
+            </div>
+            <ul class="t-bullets t-bullets-accent">
+              <li>Posting 5x/week</li>
+              <li>0 booked calls</li>
+              <li>DMs 2hrs/night</li>
+              <li>3 yrs coaching, no system</li>
+            </ul>
+            <div class="person">
+              <div class="avatar"><div class="avatar-fallback">SJ</div></div>
+              <div class="meta">
+                <strong>Sarah J.</strong>
+                <div>Online coach</div>
+              </div>
+            </div>
+          </article>
+          <article class="testimonial">
+            <p class="t-summary">The lead never sees the work. They just feel taken care of.</p>
+            <blockquote>"It feels like I have a small team."</blockquote>
+            <ul class="t-bullets">
+              <li>Hybrid 1:1 + group</li>
+              <li>Quiet, consistent leads</li>
+              <li>Concierge feel for clients</li>
+              <li>Stays the face, every call</li>
+            </ul>
+            <div class="person">
+              <div class="avatar"><div class="avatar-fallback">DK</div></div>
+              <div class="meta">
+                <strong>Dre K.</strong>
+                <div>Hybrid athlete coach</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Founder Note (Section 06) ───────────────────── -->
+    <section class="s founder" id="founder">
+      <div class="container">
+        <div class="founder-head">
+          <span class="mono">05 · Founder Note</span>
+          <h2>Built by a coach, <em>for coaches.</em></h2>
+        </div>
+        <div class="founder-grid">
+          <article class="founder-main">
+            <div class="founder-photo">
+              <img src="assets/elom.jpg" alt="Elom Ahlijah, founder of Atom" loading="lazy" />
+            </div>
+            <div class="founder-body">
+              <span class="mono mono-accent">A note from Elom</span>
+              <h3>"I built Atom for myself first."</h3>
+              <p>I had been coaching online for years, posting consistently, doing fine, and still stuck behind a phone responding to the same DM questions every night. So I built the system that handles all of that for me. Now I am putting it on other coaches. If you book a call, expect a real conversation. I listen first. I will tell you straight if Atom fits or not.<br/><br/>— Elom</p>
+              <a href="#booking" class="btn btn-ghost">Book a Discovery Call</a>
+            </div>
+          </article>
+          <aside class="founder-side">
+            <div class="founder-side-photo">
+              <img src="assets/about-atom.jpg" alt="Group coaching session in the morning" loading="lazy" />
+            </div>
+            <article class="founder-side-card">
+              <span class="mono mono-mute">About Atom</span>
+              <h4>Help first, ask later. Always.</h4>
+              <a href="#shift" class="link-arrow">Read More <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="founder-side-card">
+              <span class="mono mono-mute">Discovery Call</span>
+              <h4>20 minutes. Camera optional. No pitch, promise.</h4>
+              <a href="#booking" class="link-arrow">Book a Call <span aria-hidden="true">→</span></a>
+            </article>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── The 30 Day Promise (Section 04) ───────────────────── -->
+    <section class="s tight" id="promise">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">06 · The 30 Day Promise</span>
+          <h2>Receipts, <em>not promises.</em></h2>
+          <p>5+ booked discovery calls in 30 days, or your next quarter is free. Written into the contract.</p>
+        </div>
+        <div class="promise-card">
+          <div class="promise-header">
+            <span class="promise-pill"><span class="promise-toggle" aria-hidden="true"></span>Include Atom Concierge</span>
+            <span class="promise-live"><span class="dot"></span>Live · Numbers updated each cohort</span>
+          </div>
+          <div class="promise-rows">
+            <div class="promise-row">
+              <div class="promise-row-label">
+                <div class="promise-row-title">Booked Discovery Calls</div>
+                <div class="promise-row-sub">In your first 30 days · Foundation tier</div>
+              </div>
+              <div class="promise-row-value">
+                <div class="promise-num">5+ calls</div>
+                <div class="promise-sub">With UK + PH ops team</div>
+              </div>
+            </div>
+            <div class="promise-row">
+              <div class="promise-row-label">
+                <div class="promise-row-title">Booked Client Revenue</div>
+                <div class="promise-row-sub">Across coaches we have served to date</div>
+              </div>
+              <div class="promise-row-value">
+                <div class="promise-num">&pound;1.4M+</div>
+                <div class="promise-sub">Closed by coaches running Atom</div>
+              </div>
+            </div>
+            <div class="promise-row">
+              <div class="promise-row-label">
+                <div class="promise-row-title">Coaches Served</div>
+                <div class="promise-row-sub">Built for coaches, not gurus</div>
+              </div>
+              <div class="promise-row-value">
+                <div class="promise-num">128+</div>
+                <div class="promise-sub">Online fitness, group, hybrid</div>
+              </div>
+            </div>
+          </div>
+          <div class="promise-footer">
+            <p>No fine print. If we miss the 30 day mark, your next quarter is on us. Written into the agreement.</p>
+            <a href="#booking" class="btn btn-ghost btn-small">Read The Promise</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Soft CTA (lower-friction first step) ───────────────────── -->
+    <section class="soft" id="fit-check" aria-label="Fit-check checklist">
+      <div class="soft-inner">
+        <div>
+          <span class="mono kicker">Not ready to book?</span>
+          <h2>Start with the fit-check.</h2>
+          <p class="sub">Five questions that show whether Atom fits your business. Sent to your inbox in under a minute. No call. No pitch.</p>
+        </div>
+        <form id="fit-check-form" novalidate>
+          <label class="vh" for="fc-email">Email address</label>
+          <input id="fc-email" type="email" name="email" required autocomplete="email" placeholder="you@yourdomain.com" />
+          <button type="submit">Send me the checklist</button>
+          <p class="micro">No spam. Unsubscribe in one click.</p>
+          <p class="success" id="fc-success" hidden></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Common Questions (FAQ) ───────────────────── -->
+    <section class="s" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">Common Questions · FAQ</span>
+          <h2>Five things coaches <em>always ask.</em></h2>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>What does it cost?</summary>
+            <p>Pricing depends on your roster and your goals. We share the number on call two, after we know the fit.</p>
+          </details>
+          <details>
+            <summary>Do you guarantee results?</summary>
+            <p>We guarantee the system works as built. Results depend on your content rhythm and your offer. We coach you through both.</p>
+          </details>
+          <details>
+            <summary>How long does setup take?</summary>
+            <p>The core engine ships in two weeks. Calls can land on your calendar inside the first month.</p>
+          </details>
+          <details>
+            <summary>Who is this for?</summary>
+            <p>Online fitness coaches who post content, take calls, and want a quieter way to fill their roster.</p>
+          </details>
+          <details>
+            <summary>What if I am still small?</summary>
+            <p>Small is fine. The system scales with you. We have helped coaches with under a thousand followers book calls.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Book Your Discovery Call (Section 07) ───────────────────── -->
+    <section class="booking" id="booking">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">07 · Book Your Discovery Call</span>
+          <h2>Bring the pain points. <em>We will bring the questions.</em></h2>
+          <p>One short call. No pitch, no slide deck. Just a real conversation.</p>
+        </div>
+        <div class="booking-grid">
+          <div class="booking-main">
+            <div class="booking-status">
+              <span class="booking-pulse"><span class="dot dot-pulse"></span>3 discovery slots left this week</span>
+              <span class="booking-update">Updated daily</span>
+            </div>
+            <div class="booking-frame" id="booking-frame">
+              <iframe
+                src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
+                title="Book a discovery call with Elom"
+                loading="lazy"
+                scrolling="no"
+                id="booking-iframe"
+              ></iframe>
+            </div>
+            <span class="corner corner-tl" aria-hidden="true"></span>
+            <span class="corner corner-tr" aria-hidden="true"></span>
+            <span class="corner corner-bl" aria-hidden="true"></span>
+            <span class="corner corner-br" aria-hidden="true"></span>
+          </div>
+          <aside class="booking-aside">
+            <div class="booking-card">
+              <h3>A few things to know.</h3>
+              <ul>
+                <li><span class="b-bullet" aria-hidden="true">●</span>Calls open after 1pm UK time, every weekday.</li>
+                <li><span class="b-bullet" aria-hidden="true">●</span>Twenty minutes. Camera optional. Pen helpful.</li>
+                <li><span class="b-bullet" aria-hidden="true">●</span>We will not sell on this call. Promise.</li>
+              </ul>
+            </div>
+            <div class="booking-card">
+              <h3>What you will leave with.</h3>
+              <ul>
+                <li><span class="b-bullet check" aria-hidden="true">✓</span>A clear map of where your leads are leaking.</li>
+                <li><span class="b-bullet check" aria-hidden="true">✓</span>1 to 2 quick wins you can ship this week, even if Atom is not a fit.</li>
+                <li><span class="b-bullet check" aria-hidden="true">✓</span>A tailored 30 day plan within 48 hours, if Atom is the right fit.</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+        <div class="booking-fallback" id="booking-fallback" hidden>
+          <h3>Calendar not loading?</h3>
+          <p>Use the direct booking page if the embedded calendar above is blank or slow on your network.</p>
+          <a href="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx" class="btn btn-primary" target="_blank" rel="noopener">Open booking page</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Footer (Ft5 statement) ───────────────────── -->
+    <footer class="ft">
+      <div class="ft-inner">
+        <p class="statement">Made for coaches who hate the <em>hard sell.</em><span class="mark">Atom · Quiet Client Engine</span></p>
+        <div class="ft-meta">
+          <span>&copy; <span id="year"></span> Atom</span>
+          <div class="ft-meta-links">
+            <a href="#top">Home</a>
+            <a href="#how">How it Works</a>
+            <a href="#proof">Proof</a>
+            <a href="#booking">Book a Call</a>
+            <a href="#faq">FAQ</a>
+            <a href="#" data-legal="privacy">Privacy Policy</a>
+            <a href="#" data-legal="terms">Terms &amp; Conditions</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Year stamp
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Mobile drawer
+      (function () {
+        var hamburger = document.getElementById('hamburger');
+        var drawer = document.getElementById('drawer');
+        function close() {
+          drawer.classList.remove('open');
+          drawer.setAttribute('aria-hidden', 'true');
+          hamburger.setAttribute('aria-expanded', 'false');
+          hamburger.setAttribute('aria-label', 'Open menu');
+        }
+        hamburger.addEventListener('click', function () {
+          var open = drawer.classList.toggle('open');
+          drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+          hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+          hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+        drawer.addEventListener('click', function (e) {
+          if (e.target.tagName === 'A') setTimeout(close, 50);
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') close();
+        });
+      })();
+
+      // Fit-check soft CTA stub. Replace with your ESP integration (Mailchimp / ConvertKit / Resend / etc.)
+      (function () {
+        var form = document.getElementById('fit-check-form');
+        var input = form.querySelector('input[type="email"]');
+        var btn = form.querySelector('button');
+        var success = document.getElementById('fc-success');
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var v = (input.value || '').trim();
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+            input.focus();
+            input.setAttribute('aria-invalid', 'true');
+            return;
+          }
+          input.removeAttribute('aria-invalid');
+          input.disabled = true;
+          btn.disabled = true;
+          success.hidden = false;
+          success.textContent = 'Got it. The checklist will land in ' + v + ' within an hour. Check your inbox (and the promotions tab).';
+        });
+      })();
+
+      // Scroll-reveal — slide in / slide out, bi-directional.
+      // Note: intentionally ignores prefers-reduced-motion so animations
+      // always play for clients/viewers regardless of OS accessibility setting.
+      (function () {
+        if (!('IntersectionObserver' in window)) return;
+
+        var groups = [
+          // Hero + section heads
+          { sel: '.hero > .container > *'                                       },
+          { sel: '.hero .trust-cell'                                            },
+          { sel: '.section-head > *'                                            },
+          { sel: '.founder-head > *'                                            },
+
+          // Cards cascade between siblings
+          { sel: '.problem-card',                                stagger: 110   },
+          { sel: '.step',                                        stagger: 130   },
+          { sel: '.testimonial',                                 stagger: 110   },
+          { sel: '.feature',                                     stagger: 80    },
+
+          // Promise
+          { sel: '.promise-card'                                                },
+          { sel: '.promise-row',     variant: 'left',            stagger: 90    },
+
+          // Founder
+          { sel: '.founder-photo',   variant: 'left'                            },
+          { sel: '.founder-body > *'                                            },
+          { sel: '.founder-side-photo', variant: 'right'                        },
+          { sel: '.founder-side-card',  variant: 'right',        stagger: 130   },
+
+          // Soft CTA
+          { sel: '.soft-inner > div > *'                                        },
+          { sel: '.soft-inner > form',  variant: 'right'                        },
+
+          // FAQ
+          { sel: '.faq-list details',                            stagger: 70    },
+
+          // Booking
+          { sel: '.booking-main'                                                },
+          { sel: '.booking-status > *'                                          },
+          { sel: '.booking-aside > *',  variant: 'right',        stagger: 130   },
+          { sel: '.booking-card li',    variant: 'left'                         },
+
+          // Footer
+          { sel: 'footer.ft .statement'                                         },
+          { sel: 'footer.ft .ft-meta > *'                                       },
+        ];
+
+        groups.forEach(function (g) {
+          var nodes = document.querySelectorAll(g.sel);
+          var byParent = new Map();
+          nodes.forEach(function (el) {
+            var key = el.parentElement;
+            if (!byParent.has(key)) byParent.set(key, []);
+            byParent.get(key).push(el);
+          });
+          byParent.forEach(function (siblings) {
+            siblings.forEach(function (el, i) {
+              if (!el.hasAttribute('data-reveal')) {
+                el.setAttribute('data-reveal', g.variant || '');
+              }
+              if (g.stagger) {
+                el.style.setProperty('--reveal-delay', (i * g.stagger) + 'ms');
+              }
+            });
+          });
+        });
+
+        var io = new IntersectionObserver(function (entries) {
+          var vh = window.innerHeight || document.documentElement.clientHeight;
+          entries.forEach(function (entry) {
+            var el = entry.target;
+            if (entry.isIntersecting) {
+              el.classList.add('is-visible');
+              el.classList.remove('is-above', 'is-below');
+            } else {
+              el.classList.remove('is-visible');
+              // Element's center vs viewport midline → which side it left from.
+              var r = entry.boundingClientRect;
+              var center = r.top + r.height / 2;
+              if (center < vh / 2) {
+                el.classList.add('is-above');
+                el.classList.remove('is-below');
+              } else {
+                el.classList.add('is-below');
+                el.classList.remove('is-above');
+              }
+            }
+          });
+        }, {
+          // Shrink the trigger zone so slide-out fires while still partially visible.
+          rootMargin: '-12% 0px -12% 0px',
+          threshold: 0
+        });
+
+        document.querySelectorAll('[data-reveal]').forEach(function (el) {
+          io.observe(el);
+        });
+      })();
+
+      // Booking iframe fallback — if GHL widget renders empty after 6s, show direct link.
+      (function () {
+        var fallback = document.getElementById('booking-fallback');
+        setTimeout(function () {
+          var iframe = document.getElementById('booking-iframe');
+          if (!iframe) return;
+          try {
+            var d = iframe.contentDocument;
+            if (d && d.body && d.body.children && d.body.children.length > 0) return;
+          } catch (_) { /* cross-origin: assume it loaded */ return; }
+          fallback.hidden = false;
+        }, 6000);
+      })();
+    </script>
+
+    <!-- ───────────────────────── WebGL trail background (adapted from NeuroSync) ─────────────────────────
+         Atmospheric streaks of light that curl up at the horizon. Animation runs only while the
+         hero is in view (IntersectionObserver) and is skipped entirely when prefers-reduced-motion.
+         Palette swapped to Atom's cyan accent on dark navy. -->
+    <script type="module">
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvasEl = document.getElementById('webgl-canvas');
+
+      if (reduceMotion) {
+        canvasEl.style.display = 'none';
+      } else {
+        const [{ default: THREE_NS }, modules] = await Promise.all([
+          import('three').then(m => ({ default: m })),
+          Promise.all([
+            import('three/addons/postprocessing/EffectComposer.js'),
+            import('three/addons/postprocessing/RenderPass.js'),
+            import('three/addons/postprocessing/UnrealBloomPass.js'),
+            import('three/addons/postprocessing/ShaderPass.js'),
+            import('three/addons/postprocessing/SMAAPass.js'),
+            import('three/addons/postprocessing/OutputPass.js'),
+          ]),
+        ]);
+        const THREE = THREE_NS;
+        const [EC, RP, UBP, SP, SMAA, OP] = modules;
+        const EffectComposer = EC.EffectComposer;
+        const RenderPass = RP.RenderPass;
+        const UnrealBloomPass = UBP.UnrealBloomPass;
+        const ShaderPass = SP.ShaderPass;
+        const SMAAPass = SMAA.SMAAPass;
+        const OutputPass = OP.OutputPass;
+
+        let scene, camera, renderer, composer, bloomPass, blurPass, smaaPass, outputPass;
+        const clock = new THREE.Clock();
+        let globalTime = 0;
+        let floorMesh;
+        const trailObjects = [];
+        const trailMaterials = [];
+
+        const config = {
+          dpr: Math.min(window.devicePixelRatio, 1.5),
+          exposure: 3.6505,
+          brightness: 3.3,
+          bloomStrength: 0.22,
+          bloomRadius: 0.3,
+          bloomThreshold: 0.0,
+          speedMultiplier: 0.1,
+          linesCount: 90,
+          dotDensity: 60,
+          dotSize: 0.25,
+          dotSpeed: 1.5,
+          blurStrength: 3.5,
+          arcRadius: 10.0,
+          bendStartZ: -150.0,
+          floorLength: 132.75,
+          wallHeight: 200.0,
+          // Atom palette — dark navy with cyan accent (matches --accent oklch(82% 0.150 215)).
+          color0: '#08111c', // paper
+          color1: '#1f2d3f', // mid slate
+          color2: '#8aeaff', // bright cyan (Atom accent)
+          color3: '#ffffff', // white pop
+          color4: '#324a60', // muted blue-gray
+        };
+
+        class CycCurve extends THREE.Curve {
+          constructor(x, zStart, zBend, radius, yEnd) {
+            super();
+            this.x = x; this.zStart = zStart; this.zBend = zBend;
+            this.radius = radius; this.yEnd = yEnd;
+            this.L_flat = Math.abs(zStart - (zBend + radius));
+            this.L_arc = (Math.PI * radius) * 0.5;
+            this.L_up = Math.max(0.1, yEnd - radius);
+            this.totalLength = this.L_flat + this.L_arc + this.L_up;
+          }
+          getPoint(t, optionalTarget = new THREE.Vector3()) {
+            const d = t * this.totalLength;
+            let py = 0, pz = 0;
+            if (d <= this.L_flat) {
+              pz = this.zStart - d;
+            } else if (d <= this.L_flat + this.L_arc) {
+              const norm = (d - this.L_flat) / this.L_arc;
+              const eased = norm * norm * (3.0 - 2.0 * norm);
+              const angle = (norm * 0.4 + eased * 0.6) * (Math.PI * 0.5);
+              py = this.radius * (1.0 - Math.cos(angle));
+              pz = (this.zBend + this.radius) - Math.sin(angle) * this.radius;
+            } else {
+              py = this.radius + (d - (this.L_flat + this.L_arc));
+              pz = this.zBend;
+            }
+            return optionalTarget.set(this.x, py, pz);
+          }
+        }
+
+        function init() {
+          scene = new THREE.Scene();
+          scene.background = new THREE.Color(0x000000);
+          camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 2000);
+          camera.position.set(0, 20, 140);
+          renderer = new THREE.WebGLRenderer({ canvas: canvasEl, antialias: true, powerPreference: 'high-performance' });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(config.dpr);
+          renderer.toneMapping = THREE.LinearToneMapping;
+          renderer.toneMappingExposure = config.exposure;
+          camera.lookAt(0, 20, -50);
+
+          const renderTarget = new THREE.WebGLRenderTarget(
+            window.innerWidth * config.dpr,
+            window.innerHeight * config.dpr,
+            { type: THREE.HalfFloatType, format: THREE.RGBAFormat }
+          );
+          const renderScene = new RenderPass(scene, camera);
+          smaaPass = new SMAAPass(window.innerWidth * config.dpr, window.innerHeight * config.dpr);
+          bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            config.bloomStrength, config.bloomRadius, config.bloomThreshold
+          );
+
+          const foregroundBlurShader = {
+            uniforms: {
+              tDiffuse: { value: null },
+              resolution: { value: new THREE.Vector2(window.innerWidth * config.dpr, window.innerHeight * config.dpr) },
+              blurStrength: { value: config.blurStrength },
+            },
+            vertexShader: `
+              varying vec2 vUv;
+              void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+            `,
+            fragmentShader: `
+              uniform sampler2D tDiffuse;
+              uniform vec2 resolution;
+              uniform float blurStrength;
+              varying vec2 vUv;
+              void main() {
+                float mask = 1.0 - smoothstep(0.0, 0.35, vUv.y);
+                float radius = mask * blurStrength;
+                if (radius < 0.1) {
+                  gl_FragColor = texture2D(tDiffuse, vUv);
+                } else {
+                  vec4 color = vec4(0.0); float total = 0.0;
+                  const float GA = 2.3999632;
+                  for (int i = 0; i < 32; i++) {
+                    float f = float(i);
+                    float r = sqrt(f) * radius;
+                    float theta = f * GA;
+                    vec2 offset = vec2(cos(theta), sin(theta)) * (r / resolution);
+                    color += texture2D(tDiffuse, vUv + offset);
+                    total += 1.0;
+                  }
+                  gl_FragColor = color / total;
+                }
+              }
+            `,
+          };
+          blurPass = new ShaderPass(foregroundBlurShader);
+          outputPass = new OutputPass();
+          composer = new EffectComposer(renderer, renderTarget);
+          composer.setPixelRatio(config.dpr);
+          composer.addPass(renderScene);
+          composer.addPass(smaaPass);
+          composer.addPass(bloomPass);
+          composer.addPass(blurPass);
+          composer.addPass(outputPass);
+
+          createFloor();
+          generateTrails();
+          updateGeometries();
+          window.addEventListener('resize', onWindowResize);
+        }
+
+        function createFloor() {
+          const floorMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.85, depthWrite: false, side: THREE.DoubleSide });
+          floorMesh = new THREE.Mesh(new THREE.BufferGeometry(), floorMat);
+          floorMesh.position.set(0, -0.5, -0.5);
+          floorMesh.renderOrder = 1;
+          scene.add(floorMesh);
+        }
+
+        function generateTrails() {
+          const group = new THREE.Group();
+          scene.add(group);
+          const vertexShader = `
+            varying vec2 vUv; varying vec3 vNormal; varying vec3 vViewPosition;
+            void main() {
+              vUv = uv;
+              vNormal = normalMatrix * normal;
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vViewPosition = -mvPosition.xyz;
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `;
+          const fragmentShader = `
+            varying vec2 vUv; varying vec3 vNormal; varying vec3 vViewPosition;
+            uniform float uTime; uniform vec3 uColor; uniform float uSpeed; uniform float uOffset;
+            uniform float uTailLength; uniform float uIntensityMultiplier; uniform float uBendUv;
+            uniform float uIsReflection; uniform float uDotDensity; uniform float uDotSize;
+            uniform float uDotSpeed; uniform float uBrightness;
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+            void main() {
+              float t = fract(uTime * uSpeed + uOffset);
+              float dist = fract(t - vUv.x + 1.0);
+              float baseAlpha = smoothstep(uTailLength, 0.0, dist);
+              baseAlpha = pow(max(0.0, baseAlpha), 1.2);
+              vec3 viewDir = normalize(vViewPosition);
+              float fresnel = abs(dot(normalize(vNormal), viewDir));
+              float edgeSoftness = smoothstep(0.0, 0.02, fresnel);
+              baseAlpha *= edgeSoftness;
+              float core = pow(max(0.0, baseAlpha), 3.0) * 1.5;
+              float movingUV = vUv.x - (uTime * uSpeed * uDotSpeed) - uOffset;
+              float signalPos = movingUV * uDotDensity;
+              float dotId = floor(signalPos);
+              float dotLocal = fract(signalPos);
+              float distToCenter = length(vec2((dotLocal - 0.5) * 2.0, (fract(vUv.y + 0.5) - 0.5) * 6.0));
+              float dotShape = 1.0 - smoothstep(0.0, max(0.001, uDotSize), distToCenter);
+              float dotFinal = dotShape * step(0.6, hash(vec2(dotId, uOffset))) * (sin(uTime * 4.0 + hash(vec2(dotId)) * 6.28) * 0.3 + 0.7) * baseAlpha;
+              if (uIsReflection > 0.5) {
+                float refFade = 1.0 - smoothstep(uBendUv - 0.015, uBendUv, vUv.x);
+                baseAlpha *= refFade; core *= refFade;
+                dotFinal *= refFade * 0.1;
+                baseAlpha = pow(max(0.0, baseAlpha), 0.5) * (0.7 + hash(vUv * 300.0 + uTime * 0.05) * 0.3);
+                core *= 0.3;
+              }
+              vec3 trailColor = uColor * (baseAlpha + core * 1.5) * uIntensityMultiplier * uBrightness;
+              vec3 rgb = trailColor / max(1.0 - clamp(dotFinal * 1.8, 0.0, 0.95), 0.001) + uColor * dotFinal * 2.5 * uIntensityMultiplier * uBrightness;
+              gl_FragColor = vec4(rgb, (baseAlpha + dotFinal) * uIntensityMultiplier);
+            }
+          `;
+          for (let i = 0; i < config.linesCount; i++) {
+            const normIdx = (i / (config.linesCount - 1)) * 2 - 1;
+            const linearPos = normIdx;
+            const expPos = Math.sign(normIdx) * Math.pow(Math.abs(normIdx), 1.2);
+            let startX = (linearPos * 0.5 + expPos * 0.5) * 80;
+            startX += (Math.random() - 0.5) * 2.0;
+            const thickness = Math.random() * 0.2 + 0.1;
+            // Weight the palette toward Atom cyan + white (the brand glow) so the
+            // composition reads as "Atom-coloured streaks" not random rainbow.
+            const r = Math.random();
+            let colorIdx;
+            if (r < 0.45) colorIdx = 2;        // cyan
+            else if (r < 0.6) colorIdx = 3;    // white
+            else if (r < 0.85) colorIdx = 1;   // mid slate
+            else if (r < 0.95) colorIdx = 4;   // muted blue
+            else colorIdx = 0;                  // dark base (rare)
+
+            const uniforms = {
+              uTime: { value: 0 },
+              uColor: { value: new THREE.Color(config[`color${colorIdx}`]) },
+              uColorIndex: { value: colorIdx },
+              uSpeed: { value: Math.random() * 0.5 + 0.2 },
+              uOffset: { value: Math.random() },
+              uTailLength: { value: Math.random() * 0.4 + 0.3 },
+              uIntensityMultiplier: { value: 1.0 },
+              uBendUv: { value: 0.0 },
+              uIsReflection: { value: 0.0 },
+              uDotDensity: { value: config.dotDensity },
+              uDotSize: { value: config.dotSize },
+              uDotSpeed: { value: config.dotSpeed },
+              uBrightness: { value: config.brightness },
+            };
+            const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+            const mesh = new THREE.Mesh(new THREE.BufferGeometry(), material);
+            const refMaterial = material.clone();
+            refMaterial.uniforms.uIntensityMultiplier.value = 0.4;
+            refMaterial.uniforms.uIsReflection.value = 1.0;
+            const refMesh = new THREE.Mesh(new THREE.BufferGeometry(), refMaterial);
+            refMesh.scale.y = -1; refMesh.position.y = -1.0;
+            group.add(mesh, refMesh);
+            trailMaterials.push(material.uniforms, refMaterial.uniforms);
+            trailObjects.push({ mesh, refMesh, startX, thickness });
+          }
+        }
+
+        function updateGeometries() {
+          if (floorMesh.geometry) floorMesh.geometry.dispose();
+          const floorGeo = new THREE.PlaneGeometry(1000, 1000, 1, 1500);
+          floorGeo.rotateX(-Math.PI * 0.5);
+          const pos = floorGeo.attributes.position.array;
+          for (let i = 0; i < pos.length; i += 3) {
+            if (pos[i + 2] < config.bendStartZ) {
+              let d = config.bendStartZ - pos[i + 2];
+              let maxA = config.arcRadius * Math.PI * 0.5;
+              if (d < maxA) {
+                let n = d / maxA;
+                let a = (n * 0.4 + (n * n * (3.0 - 2.0 * n)) * 0.6) * (Math.PI * 0.5);
+                pos[i + 1] = config.arcRadius * (1.0 - Math.cos(a));
+                pos[i + 2] = (config.bendStartZ) - Math.sin(a) * config.arcRadius;
+              } else {
+                pos[i + 1] = config.arcRadius + (d - maxA);
+                pos[i + 2] = config.bendStartZ - config.arcRadius;
+              }
+            }
+          }
+          floorGeo.computeVertexNormals();
+          floorMesh.geometry = floorGeo;
+          const bendUv = Math.abs(config.floorLength - config.bendStartZ) /
+            (Math.abs(config.floorLength - config.bendStartZ) + (Math.PI * config.arcRadius) * 0.5 + Math.max(0.1, config.wallHeight - config.arcRadius));
+          trailObjects.forEach(obj => {
+            const path = new CycCurve(obj.startX, config.floorLength, config.bendStartZ - config.arcRadius, config.arcRadius, config.wallHeight);
+            const geo = new THREE.TubeGeometry(path, 200, obj.thickness, 8, false);
+            if (obj.mesh.geometry) obj.mesh.geometry.dispose();
+            obj.mesh.geometry = obj.refMesh.geometry = geo;
+            obj.mesh.material.uniforms.uBendUv.value = obj.refMesh.material.uniforms.uBendUv.value = bendUv;
+          });
+        }
+
+        function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          composer.setSize(window.innerWidth, window.innerHeight);
+          if (smaaPass) smaaPass.setSize(window.innerWidth * config.dpr, window.innerHeight * config.dpr);
+          blurPass.uniforms.resolution.value.set(window.innerWidth * config.dpr, window.innerHeight * config.dpr);
+        }
+
+        // Render the whole time the page is visible — the trails are now visible
+        // behind every section as the user scrolls. Pause only when the tab is
+        // backgrounded so we're a good citizen on the user's CPU/GPU.
+        function animate() {
+          requestAnimationFrame(animate);
+          if (document.hidden) return;
+          globalTime += clock.getDelta() * config.speedMultiplier;
+          trailMaterials.forEach(m => m.uTime.value = globalTime);
+          composer.render();
+        }
+
+        init();
+        animate();
+      }
+    </script>
+  </body>
+</html>
