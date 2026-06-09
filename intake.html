@@ -50,6 +50,9 @@
   .secure{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;
     color:var(--ok);background:#00d68f10;border:1px solid #00d68f2e;padding:5px 11px;border-radius:999px;margin-bottom:16px}
   .dot{width:7px;height:7px;border-radius:999px;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .cal-wrap{max-width:920px}
+  .cal-frame{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 20px 50px #00000055}
+  .cal-frame iframe{width:100%;min-height:740px;border:0;display:block}
 </style>
 </head>
 <body>
@@ -111,10 +114,14 @@
     </form>
   </div>
 
-  <div id="done-view" class="card ok-screen hide">
-    <div class="ok-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-    <h1 style="margin-bottom:8px">You're all set 🎉</h1>
-    <p class="lede" style="margin:0 auto;max-width:380px">Thanks — your coach has everything they need to get started. You can close this tab; they'll be in touch shortly.</p>
+  <div id="cal-view" class="hide">
+    <span class="secure"><span class="dot"></span> Intake received</span>
+    <h1>Last step — pick your time.</h1>
+    <p class="lede">Choose a slot that suits you. Once you're booked we'll take you back to the homepage.</p>
+    <div class="cal-frame">
+      <iframe id="cal-iframe" title="Book your discovery call" scrolling="no"
+        data-src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"></iframe>
+    </div>
   </div>
 </div>
 
@@ -149,9 +156,7 @@
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (res) {
       if (res && res.ok) {
-        document.getElementById("form-view").classList.add("hide");
-        document.getElementById("done-view").classList.remove("hide");
-        window.scrollTo(0, 0);
+        showCalendar();
       } else { throw new Error((res && res.error) || "failed"); }
     })
     .catch(function () {
@@ -161,6 +166,28 @@
   });
 
   function showErr(m) { errEl.textContent = m; errEl.classList.remove("hide"); }
+
+  // After the intake submits, reveal the booking calendar.
+  function showCalendar() {
+    var cal = document.getElementById("cal-iframe");
+    if (cal && !cal.src) cal.src = cal.getAttribute("data-src");
+    document.getElementById("form-view").classList.add("hide");
+    document.getElementById("cal-view").classList.remove("hide");
+    document.querySelector(".wrap").classList.add("cal-wrap");
+    window.scrollTo(0, 0);
+  }
+
+  // When the GoHighLevel calendar reports a completed booking, go to the homepage.
+  // Matched conservatively so the widget's load/resize messages don't trigger early.
+  window.addEventListener("message", function (e) {
+    var origin = (e && e.origin) || "";
+    if (origin.indexOf("leadconnectorhq.com") === -1 && origin.indexOf("msgsndr") === -1) return;
+    var d = e.data;
+    var blob = (typeof d === "string") ? d : JSON.stringify(d || "");
+    if (/appointment|booking/i.test(blob) && /(book|schedul|confirm|success|complete)/i.test(blob)) {
+      window.location.href = "index.html";
+    }
+  });
 </script>
 </body>
 </html>
