@@ -1625,114 +1625,6 @@
         .booking-grid { grid-template-columns: 1fr; }
       }
 
-      /* ───── Intake-first CTA panel ───── */
-      .booking-cta-panel {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        gap: 14px;
-        padding: 56px 32px 60px;
-        min-height: 360px;
-      }
-      .booking-cta-panel h3 {
-        font-size: clamp(24px, 3vw, 34px);
-        font-weight: 600;
-        letter-spacing: -0.025em;
-        line-height: 1.1;
-        color: var(--ink);
-        max-width: 18ch;
-      }
-      .booking-cta-panel > p {
-        font-size: 15.5px;
-        line-height: 1.6;
-        color: var(--ink-2);
-        max-width: 46ch;
-        margin: 0;
-      }
-      .booking-cta-panel .btn {
-        margin-top: 10px;
-      }
-      .booking-cta-panel .btn svg { transition: transform var(--dur-short) var(--ease-out); }
-      .booking-cta-panel .btn:hover svg { transform: translateX(3px); }
-      .booking-cta-micro {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--ink-3);
-      }
-
-      /* ───── Intake gate (Step 1 → Step 2) ───── */
-      .intake-head {
-        padding: 18px 20px 16px;
-        border-bottom: 1px solid var(--rule-soft);
-        background: oklch(14% 0.020 220 / 0.35);
-        border-radius: var(--radius-card) var(--radius-card) 0 0;
-      }
-      .intake-step-n {
-        display: block;
-        font-family: var(--font-mono);
-        font-size: 10px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 8px;
-      }
-      .intake-head h3 {
-        font-size: clamp(18px, 2vw, 22px);
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        margin-bottom: 6px;
-        color: var(--ink);
-      }
-      .intake-head p {
-        font-size: 14px;
-        line-height: 1.5;
-        color: var(--ink-2);
-        margin: 0;
-        max-width: 60ch;
-      }
-      /* When a head sits above it, the frame's top corners stay square. */
-      .booking-intake .booking-frame,
-      .booking-cal .booking-frame {
-        border-radius: 0 0 var(--radius-card) var(--radius-card);
-        border-top: 0;
-      }
-      .intake-actions {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 14px 18px;
-        padding: 18px 20px;
-        border: 1px solid var(--rule-soft);
-        border-top: 0;
-        border-radius: 0 0 var(--radius-card) var(--radius-card);
-        background: oklch(8% 0.015 220 / 0.4);
-      }
-      .intake-actions .btn { flex: none; }
-      .intake-micro {
-        font-size: 12.5px;
-        color: var(--ink-3);
-      }
-      .intake-link {
-        background: none;
-        border: 0;
-        padding: 0;
-        font: inherit;
-        color: var(--accent);
-        cursor: pointer;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
-      .intake-link:hover { color: var(--focus); }
-      @media (max-width: 600px) {
-        .intake-actions { flex-direction: column; align-items: stretch; }
-        .intake-actions .btn { width: 100%; justify-content: center; }
-        .intake-micro { text-align: center; }
-      }
-
       /* ═════════ Awesome Calendar Frame ═════════ */
       .booking-main {
         position: relative;
@@ -1785,8 +1677,6 @@
       }
 
       .booking-main > .booking-status,
-      .booking-main > .booking-intake,
-      .booking-main > .booking-cal,
       .booking-main > .booking-frame { position: relative; z-index: 1; }
 
       /* Status bar — premium glass strip */
@@ -2448,43 +2338,15 @@
               <span class="booking-pulse"><span class="dot dot-pulse"></span>3 discovery slots left this week</span>
               <span class="booking-update">Updated daily</span>
             </div>
-
-            <!-- Step 1 — Intake. Opens the form in a new tab; confirming reveals the calendar. -->
-            <div class="booking-intake" id="booking-intake">
-              <div class="booking-cta-panel">
-                <span class="intake-step-n">Step 1 of 2 · Intake</span>
-                <h3>First, a 2-minute intake form.</h3>
-                <p>Open the form and tell us about your goals. When you&rsquo;re done, come back here and reveal your booking calendar.</p>
-                <div class="cta-row">
-                  <a href="https://atom-intake.vercel.app/" class="btn btn-primary btn-large" target="_blank" rel="noopener" id="intake-open">
-                    Fill Intake
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                  </a>
-                  <button type="button" class="btn btn-ghost btn-large" id="intake-done">I&rsquo;ve done it — show my calendar</button>
-                </div>
-                <span class="booking-cta-micro">Opens in a new tab · ~2 minutes · No hard sell</span>
-              </div>
+            <div class="booking-frame" id="booking-frame">
+              <iframe
+                src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
+                title="Book a discovery call with Elom"
+                loading="lazy"
+                scrolling="no"
+                id="booking-iframe"
+              ></iframe>
             </div>
-
-            <!-- Step 2 — Calendar. Hidden until intake is confirmed; iframe loads on reveal.
-                 After a booking it sends the visitor back to the homepage. -->
-            <div class="booking-cal" id="booking-cal" hidden>
-              <div class="intake-head">
-                <span class="intake-step-n">Step 2 of 2 · Pick a time</span>
-                <h3>Intake received. Choose your slot.</h3>
-                <p>Pick whatever works — once you&rsquo;re booked we&rsquo;ll take you back to the homepage.</p>
-              </div>
-              <div class="booking-frame" id="booking-frame">
-                <iframe
-                  data-src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
-                  title="Book a discovery call with Elom"
-                  loading="lazy"
-                  scrolling="no"
-                  id="booking-iframe"
-                ></iframe>
-              </div>
-            </div>
-
             <span class="corner corner-tl" aria-hidden="true"></span>
             <span class="corner corner-tr" aria-hidden="true"></span>
             <span class="corner corner-bl" aria-hidden="true"></span>
@@ -2508,6 +2370,11 @@
               </ul>
             </div>
           </aside>
+        </div>
+        <div class="booking-fallback" id="booking-fallback" hidden>
+          <h3>Calendar not loading?</h3>
+          <p>Use the direct booking page if the embedded calendar above is blank or slow on your network.</p>
+          <a href="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx" class="btn btn-primary" target="_blank" rel="noopener">Open booking page</a>
         </div>
       </div>
     </section>
@@ -2578,54 +2445,6 @@
           btn.disabled = true;
           success.hidden = false;
           success.textContent = 'Got it. The checklist will land in ' + v + ' within an hour. Check your inbox (and the promotions tab).';
-        });
-      })();
-
-      // Booking flow — intake form first; confirming reveals the calendar;
-      // a completed booking sends the visitor back to the homepage.
-      (function () {
-        var intake    = document.getElementById('booking-intake');
-        var cal       = document.getElementById('booking-cal');
-        var doneBtn   = document.getElementById('intake-done');
-        var calIframe = document.getElementById('booking-iframe');
-        var calLoaded = false;
-        var HOME_URL  = '/'; // where to send people after they book
-
-        function loadCalendar() {
-          if (calIframe && !calLoaded) {
-            calIframe.src = calIframe.getAttribute('data-src');
-            calLoaded = true;
-          }
-        }
-
-        function showCalendar() {
-          if (intake) intake.hidden = true;
-          if (cal) cal.hidden = false;
-          loadCalendar();
-          if (cal && cal.scrollIntoView) {
-            cal.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }
-
-        if (doneBtn) doneBtn.addEventListener('click', showCalendar);
-
-        window.addEventListener('message', function (e) {
-          var d = e && e.data;
-
-          // If the intake app ever posts a completion signal, advance automatically.
-          if (d === 'intake-complete' || (d && d.type === 'intake-complete')) {
-            showCalendar();
-            return;
-          }
-
-          // GoHighLevel booking completed → go home. Matched conservatively so the
-          // widget's load/resize messages don't trigger a premature redirect.
-          var origin = (e && e.origin) || '';
-          if (origin.indexOf('leadconnectorhq.com') === -1 && origin.indexOf('msgsndr') === -1) return;
-          var blob = (typeof d === 'string') ? d : JSON.stringify(d || '');
-          if (/appointment|booking/i.test(blob) && /(book|schedul|confirm|success|complete)/i.test(blob)) {
-            window.location.href = HOME_URL;
-          }
         });
       })();
 
@@ -2728,6 +2547,19 @@
         });
       })();
 
+      // Booking iframe fallback — if GHL widget renders empty after 6s, show direct link.
+      (function () {
+        var fallback = document.getElementById('booking-fallback');
+        setTimeout(function () {
+          var iframe = document.getElementById('booking-iframe');
+          if (!iframe) return;
+          try {
+            var d = iframe.contentDocument;
+            if (d && d.body && d.body.children && d.body.children.length > 0) return;
+          } catch (_) { /* cross-origin: assume it loaded */ return; }
+          fallback.hidden = false;
+        }, 6000);
+      })();
     </script>
 
     <!-- ───────────────────────── WebGL trail background (adapted from NeuroSync) ─────────────────────────
