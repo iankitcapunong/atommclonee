@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Client Intake — CAYA Fitness</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --soft:#0d0f12; --panel:#121212; --line:#ffffff14; --line2:#ffffff29;
+    --txt:#fff; --mut:#ffffffa8; --neon:#00d4ff; --ok:#00d68f;
+    --head:"Outfit",-apple-system,Segoe UI,sans-serif; --sans:"Inter",-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;font-family:var(--sans);color:var(--txt);
+    background:radial-gradient(1100px 560px at 72% -12%,#0099c422,transparent 60%),
+               radial-gradient(820px 460px at -10% 112%,#6b6bff14,transparent 55%),var(--bg);
+    -webkit-font-smoothing:antialiased;padding:28px 16px 64px}
+  .wrap{max-width:620px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:11px;margin:8px 2px 22px}
+  .logo{width:34px;height:34px;filter:drop-shadow(0 0 9px #00d4ff66)}
+  .bn{font-family:var(--head);font-weight:800;font-size:20px}
+  .bn .d{color:var(--neon)}
+  .bsub{font-size:12px;color:var(--mut);font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+  h1{font-family:var(--head);font-weight:800;font-size:27px;letter-spacing:-.02em;margin:4px 0 6px}
+  .lede{color:var(--mut);font-size:14.5px;line-height:1.55;margin:0 0 22px}
+  .card{background:linear-gradient(180deg,#ffffff07,#ffffff02),var(--panel);border:1px solid var(--line);
+    border-radius:18px;padding:22px;box-shadow:0 20px 50px #00000055}
+  .grp{margin-bottom:16px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin:0 0 7px}
+  label .req{color:var(--neon);margin-left:3px}
+  input,select,textarea{width:100%;background:var(--soft);border:1px solid var(--line2);color:var(--txt);
+    border-radius:11px;padding:12px 13px;font-family:var(--sans);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 3px #00d4ff22}
+  textarea{resize:vertical;min-height:74px}
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 18px,calc(100% - 13px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .btn{width:100%;margin-top:8px;cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px;color:#04222b;
+    border:none;border-radius:11px;padding:14px;background:linear-gradient(180deg,#2fe0ff,var(--neon));
+    box-shadow:0 8px 24px #00d4ff33,inset 0 1px 0 #ffffff66;transition:filter .12s,transform .12s}
+  .btn:hover{filter:brightness(1.05)} .btn:active{transform:translateY(1px)} .btn:disabled{opacity:.6;cursor:progress}
+  .note{margin-top:14px;font-size:12px;color:var(--mut);line-height:1.55;text-align:center}
+  .err{margin-top:14px;background:#ff557712;border:1px solid #ff557733;color:#ffc6d2;border-radius:11px;padding:12px 14px;font-size:13px}
+  .ok-screen{text-align:center;padding:40px 22px}
+  .ok-ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;margin:0 auto 18px;
+    background:#00d68f1f;color:var(--ok);box-shadow:inset 0 0 0 1px #00d68f44}
+  .hide{display:none}
+  .secure{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;
+    color:var(--ok);background:#00d68f10;border:1px solid #00d68f2e;padding:5px 11px;border-radius:999px;margin-bottom:16px}
+  .dot{width:7px;height:7px;border-radius:999px;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <img class="logo" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='14' y='28' width='36' height='28' rx='5' fill='%2300d4ff'/%3E%3Cpath d='M22 28 V20 a10 10 0 0 1 20 0 V28' fill='none' stroke='%2300d4ff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='40' r='3' fill='%230a0a0a'/%3E%3Crect x='30.5' y='40' width='3' height='7' fill='%230a0a0a'/%3E%3C/svg%3E" />
+    <div><div class="bn">Atom<span class="d">.</span></div><div class="bsub">CAYA Fitness</div></div>
+  </div>
+
+  <div id="form-view">
+    <span class="secure"><span class="dot"></span> Secure intake</span>
+    <h1 id="hello">Welcome — let's get you set up.</h1>
+    <p class="lede">A few quick questions so your coach can build the right plan from day one. Takes about 3 minutes. Everything goes straight to your coach.</p>
+
+    <form id="intake" class="card" autocomplete="on">
+      <div class="row2">
+        <div class="grp"><label>Full name<span class="req">*</span></label><input name="name" required /></div>
+        <div class="grp"><label>Email<span class="req">*</span></label><input name="email" type="email" required /></div>
+      </div>
+      <div class="row2">
+        <div class="grp"><label>Phone</label><input name="phone" inputmode="tel" /></div>
+        <div class="grp"><label>Date of birth</label><input name="dob" placeholder="DD / MM / YYYY" /></div>
+      </div>
+      <div class="grp"><label>Primary goal<span class="req">*</span></label>
+        <select name="goal" required>
+          <option value="">Choose one…</option>
+          <option>Fat loss</option><option>Muscle gain</option><option>Performance / sport</option>
+          <option>General health &amp; energy</option><option>Other</option>
+        </select>
+      </div>
+      <div class="row2">
+        <div class="grp"><label>Current weight</label><input name="current_weight" placeholder="e.g. 82 kg" /></div>
+        <div class="grp"><label>Goal weight</label><input name="goal_weight" placeholder="e.g. 74 kg" /></div>
+      </div>
+      <div class="row2">
+        <div class="grp"><label>Height</label><input name="height" placeholder="e.g. 178 cm" /></div>
+        <div class="grp"><label>Training experience</label>
+          <select name="experience">
+            <option value="">Choose…</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="grp"><label>Days/week you can train</label>
+          <select name="days"><option value="">Choose…</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+        </div>
+        <div class="grp"><label>Preferred times</label><input name="times" placeholder="e.g. Early mornings" /></div>
+      </div>
+      <div class="grp"><label>Any injuries or health conditions? (PAR-Q)</label>
+        <textarea name="health" placeholder="Injuries, medications, conditions, or 'none'"></textarea></div>
+      <div class="grp"><label>Dietary restrictions / preferences</label>
+        <input name="diet" placeholder="e.g. Vegetarian, no dairy" /></div>
+      <div class="grp"><label>Biggest challenge or anything else your coach should know</label>
+        <textarea name="notes"></textarea></div>
+
+      <button class="btn" id="submit" type="submit">Submit intake</button>
+      <div id="err" class="err hide"></div>
+      <p class="note">🔒 Sent securely to your coach. We don't store this anywhere else.</p>
+    </form>
+  </div>
+
+  <div id="done-view" class="card ok-screen hide">
+    <div class="ok-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h1 style="margin-bottom:8px">You're all set 🎉</h1>
+    <p class="lede" style="margin:0 auto;max-width:380px">Thanks — your coach has everything they need to get started. You can close this tab; they'll be in touch shortly.</p>
+  </div>
+</div>
+
+<script>
+  var ENDPOINT = "https://madeeas.app.n8n.cloud/webhook/atom-intake";
+  var q = new URLSearchParams(location.search);
+  var cid = q.get("cid") || "";
+  var nm = q.get("name") || "";
+  if (nm) {
+    document.querySelector('[name=name]').value = nm;
+    document.getElementById('hello').textContent = "Welcome, " + nm.split(" ")[0] + " — let's get you set up.";
+  }
+
+  var form = document.getElementById("intake");
+  var btn = document.getElementById("submit");
+  var errEl = document.getElementById("err");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    errEl.classList.add("hide");
+    var data = { cid: cid };
+    new FormData(form).forEach(function (v, k) { data[k] = String(v || "").trim(); });
+    if (!data.name || !data.email) { showErr("Please add your name and email."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { showErr("That email doesn't look right."); return; }
+
+    btn.disabled = true; btn.textContent = "Sending…";
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(function (r) { return r.json().catch(function () { return {}; }); })
+    .then(function (res) {
+      if (res && res.ok) {
+        document.getElementById("form-view").classList.add("hide");
+        document.getElementById("done-view").classList.remove("hide");
+        window.scrollTo(0, 0);
+      } else { throw new Error((res && res.error) || "failed"); }
+    })
+    .catch(function () {
+      showErr("Something went wrong sending that. Please try again in a moment.");
+      btn.disabled = false; btn.textContent = "Submit intake";
+    });
+  });
+
+  function showErr(m) { errEl.textContent = m; errEl.classList.remove("hide"); }
+</script>
+</body>
+</html>
