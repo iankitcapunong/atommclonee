@@ -2449,24 +2449,20 @@
               <span class="booking-update">Updated daily</span>
             </div>
 
-            <!-- Step 1 — Intake form, embedded. Confirming reveals the calendar. -->
+            <!-- Step 1 — Intake. Opens the form in a new tab; confirming reveals the calendar. -->
             <div class="booking-intake" id="booking-intake">
-              <div class="intake-head">
+              <div class="booking-cta-panel">
                 <span class="intake-step-n">Step 1 of 2 · Intake</span>
                 <h3>First, a 2-minute intake form.</h3>
-                <p>Tell us about your goals. When you&rsquo;re done, hit the button below and your booking calendar appears.</p>
-              </div>
-              <div class="booking-frame">
-                <iframe
-                  src="https://atom-intake.vercel.app/"
-                  title="Client intake form"
-                  loading="lazy"
-                  id="intake-iframe"
-                ></iframe>
-              </div>
-              <div class="intake-actions">
-                <button type="button" class="btn btn-primary" id="intake-done">I&rsquo;ve submitted the form — show my calendar</button>
-                <span class="intake-micro">Form not loading? <a class="intake-link" href="https://atom-intake.vercel.app/" target="_blank" rel="noopener">Open it in a new tab</a></span>
+                <p>Open the form and tell us about your goals. When you&rsquo;re done, come back here and reveal your booking calendar.</p>
+                <div class="cta-row">
+                  <a href="https://atom-intake.vercel.app/" class="btn btn-primary btn-large" target="_blank" rel="noopener" id="intake-open">
+                    Fill Intake
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                  <button type="button" class="btn btn-ghost btn-large" id="intake-done">I&rsquo;ve done it — show my calendar</button>
+                </div>
+                <span class="booking-cta-micro">Opens in a new tab · ~2 minutes · No hard sell</span>
               </div>
             </div>
 
