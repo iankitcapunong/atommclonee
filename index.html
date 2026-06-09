@@ -1785,7 +1785,8 @@
       }
 
       .booking-main > .booking-status,
-      .booking-main > .booking-cta-panel,
+      .booking-main > .booking-intake,
+      .booking-main > .booking-cal,
       .booking-main > .booking-frame { position: relative; z-index: 1; }
 
       /* Status bar — premium glass strip */
@@ -2448,17 +2449,44 @@
               <span class="booking-update">Updated daily</span>
             </div>
 
-            <!-- Intake-first CTA. The button sends people to the intake form; the
-                 booking calendar is presented at the end of that form. -->
-            <div class="booking-cta-panel">
-              <span class="intake-step-n">Start here</span>
-              <h3>Fill out a 2-minute intake form.</h3>
-              <p>Tell us about your goals first — then pick a time that suits you. The booking calendar opens right at the end of the form.</p>
-              <a href="https://atom-intake.vercel.app/" class="btn btn-primary btn-large" id="intake-cta">
-                Fill Intake
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </a>
-              <span class="booking-cta-micro">Takes ~2 minutes · Camera optional · No hard sell</span>
+            <!-- Step 1 — Intake form, embedded. Confirming reveals the calendar. -->
+            <div class="booking-intake" id="booking-intake">
+              <div class="intake-head">
+                <span class="intake-step-n">Step 1 of 2 · Intake</span>
+                <h3>First, a 2-minute intake form.</h3>
+                <p>Tell us about your goals. When you&rsquo;re done, hit the button below and your booking calendar appears.</p>
+              </div>
+              <div class="booking-frame">
+                <iframe
+                  src="https://atom-intake.vercel.app/"
+                  title="Client intake form"
+                  loading="lazy"
+                  id="intake-iframe"
+                ></iframe>
+              </div>
+              <div class="intake-actions">
+                <button type="button" class="btn btn-primary" id="intake-done">I&rsquo;ve submitted the form — show my calendar</button>
+                <span class="intake-micro">Form not loading? <a class="intake-link" href="https://atom-intake.vercel.app/" target="_blank" rel="noopener">Open it in a new tab</a></span>
+              </div>
+            </div>
+
+            <!-- Step 2 — Calendar. Hidden until intake is confirmed; iframe loads on reveal.
+                 After a booking it sends the visitor back to the homepage. -->
+            <div class="booking-cal" id="booking-cal" hidden>
+              <div class="intake-head">
+                <span class="intake-step-n">Step 2 of 2 · Pick a time</span>
+                <h3>Intake received. Choose your slot.</h3>
+                <p>Pick whatever works — once you&rsquo;re booked we&rsquo;ll take you back to the homepage.</p>
+              </div>
+              <div class="booking-frame" id="booking-frame">
+                <iframe
+                  data-src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
+                  title="Book a discovery call with Elom"
+                  loading="lazy"
+                  scrolling="no"
+                  id="booking-iframe"
+                ></iframe>
+              </div>
             </div>
 
             <span class="corner corner-tl" aria-hidden="true"></span>
@@ -2554,6 +2582,54 @@
           btn.disabled = true;
           success.hidden = false;
           success.textContent = 'Got it. The checklist will land in ' + v + ' within an hour. Check your inbox (and the promotions tab).';
+        });
+      })();
+
+      // Booking flow — intake form first; confirming reveals the calendar;
+      // a completed booking sends the visitor back to the homepage.
+      (function () {
+        var intake    = document.getElementById('booking-intake');
+        var cal       = document.getElementById('booking-cal');
+        var doneBtn   = document.getElementById('intake-done');
+        var calIframe = document.getElementById('booking-iframe');
+        var calLoaded = false;
+        var HOME_URL  = '/'; // where to send people after they book
+
+        function loadCalendar() {
+          if (calIframe && !calLoaded) {
+            calIframe.src = calIframe.getAttribute('data-src');
+            calLoaded = true;
+          }
+        }
+
+        function showCalendar() {
+          if (intake) intake.hidden = true;
+          if (cal) cal.hidden = false;
+          loadCalendar();
+          if (cal && cal.scrollIntoView) {
+            cal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+
+        if (doneBtn) doneBtn.addEventListener('click', showCalendar);
+
+        window.addEventListener('message', function (e) {
+          var d = e && e.data;
+
+          // If the intake app ever posts a completion signal, advance automatically.
+          if (d === 'intake-complete' || (d && d.type === 'intake-complete')) {
+            showCalendar();
+            return;
+          }
+
+          // GoHighLevel booking completed → go home. Matched conservatively so the
+          // widget's load/resize messages don't trigger a premature redirect.
+          var origin = (e && e.origin) || '';
+          if (origin.indexOf('leadconnectorhq.com') === -1 && origin.indexOf('msgsndr') === -1) return;
+          var blob = (typeof d === 'string') ? d : JSON.stringify(d || '');
+          if (/appointment|booking/i.test(blob) && /(book|schedul|confirm|success|complete)/i.test(blob)) {
+            window.location.href = HOME_URL;
+          }
         });
       })();
 
