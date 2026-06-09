@@ -1625,6 +1625,114 @@
         .booking-grid { grid-template-columns: 1fr; }
       }
 
+      /* ───── Intake-first CTA panel ───── */
+      .booking-cta-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 14px;
+        padding: 56px 32px 60px;
+        min-height: 360px;
+      }
+      .booking-cta-panel h3 {
+        font-size: clamp(24px, 3vw, 34px);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        color: var(--ink);
+        max-width: 18ch;
+      }
+      .booking-cta-panel > p {
+        font-size: 15.5px;
+        line-height: 1.6;
+        color: var(--ink-2);
+        max-width: 46ch;
+        margin: 0;
+      }
+      .booking-cta-panel .btn {
+        margin-top: 10px;
+      }
+      .booking-cta-panel .btn svg { transition: transform var(--dur-short) var(--ease-out); }
+      .booking-cta-panel .btn:hover svg { transform: translateX(3px); }
+      .booking-cta-micro {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+
+      /* ───── Intake gate (Step 1 → Step 2) ───── */
+      .intake-head {
+        padding: 18px 20px 16px;
+        border-bottom: 1px solid var(--rule-soft);
+        background: oklch(14% 0.020 220 / 0.35);
+        border-radius: var(--radius-card) var(--radius-card) 0 0;
+      }
+      .intake-step-n {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .intake-head h3 {
+        font-size: clamp(18px, 2vw, 22px);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 6px;
+        color: var(--ink);
+      }
+      .intake-head p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--ink-2);
+        margin: 0;
+        max-width: 60ch;
+      }
+      /* When a head sits above it, the frame's top corners stay square. */
+      .booking-intake .booking-frame,
+      .booking-cal .booking-frame {
+        border-radius: 0 0 var(--radius-card) var(--radius-card);
+        border-top: 0;
+      }
+      .intake-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 18px;
+        padding: 18px 20px;
+        border: 1px solid var(--rule-soft);
+        border-top: 0;
+        border-radius: 0 0 var(--radius-card) var(--radius-card);
+        background: oklch(8% 0.015 220 / 0.4);
+      }
+      .intake-actions .btn { flex: none; }
+      .intake-micro {
+        font-size: 12.5px;
+        color: var(--ink-3);
+      }
+      .intake-link {
+        background: none;
+        border: 0;
+        padding: 0;
+        font: inherit;
+        color: var(--accent);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .intake-link:hover { color: var(--focus); }
+      @media (max-width: 600px) {
+        .intake-actions { flex-direction: column; align-items: stretch; }
+        .intake-actions .btn { width: 100%; justify-content: center; }
+        .intake-micro { text-align: center; }
+      }
+
       /* ═════════ Awesome Calendar Frame ═════════ */
       .booking-main {
         position: relative;
@@ -2338,15 +2446,20 @@
               <span class="booking-pulse"><span class="dot dot-pulse"></span>3 discovery slots left this week</span>
               <span class="booking-update">Updated daily</span>
             </div>
-            <div class="booking-frame" id="booking-frame">
-              <iframe
-                src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
-                title="Book a discovery call with Elom"
-                loading="lazy"
-                scrolling="no"
-                id="booking-iframe"
-              ></iframe>
+
+            <!-- Intake-first CTA. The button sends people to the intake form; the
+                 booking calendar is presented at the end of that form. -->
+            <div class="booking-cta-panel">
+              <span class="intake-step-n">Start here</span>
+              <h3>Fill out a 2-minute intake form.</h3>
+              <p>Tell us about your goals first — then pick a time that suits you. The booking calendar opens right at the end of the form.</p>
+              <a href="https://atom-intake.vercel.app/" class="btn btn-primary btn-large" id="intake-cta">
+                Fill Intake
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <span class="booking-cta-micro">Takes ~2 minutes · Camera optional · No hard sell</span>
             </div>
+
             <span class="corner corner-tl" aria-hidden="true"></span>
             <span class="corner corner-tr" aria-hidden="true"></span>
             <span class="corner corner-bl" aria-hidden="true"></span>
@@ -2370,11 +2483,6 @@
               </ul>
             </div>
           </aside>
-        </div>
-        <div class="booking-fallback" id="booking-fallback" hidden>
-          <h3>Calendar not loading?</h3>
-          <p>Use the direct booking page if the embedded calendar above is blank or slow on your network.</p>
-          <a href="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx" class="btn btn-primary" target="_blank" rel="noopener">Open booking page</a>
         </div>
       </div>
     </section>
@@ -2547,19 +2655,6 @@
         });
       })();
 
-      // Booking iframe fallback — if GHL widget renders empty after 6s, show direct link.
-      (function () {
-        var fallback = document.getElementById('booking-fallback');
-        setTimeout(function () {
-          var iframe = document.getElementById('booking-iframe');
-          if (!iframe) return;
-          try {
-            var d = iframe.contentDocument;
-            if (d && d.body && d.body.children && d.body.children.length > 0) return;
-          } catch (_) { /* cross-origin: assume it loaded */ return; }
-          fallback.hidden = false;
-        }, 6000);
-      })();
     </script>
 
     <!-- ───────────────────────── WebGL trail background (adapted from NeuroSync) ─────────────────────────
