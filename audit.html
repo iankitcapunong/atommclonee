@@ -692,7 +692,7 @@
             <label class="radio-opt">
               <input type="radio" name="revenue" value="under-25k" required />
               <span class="radio-mark" aria-hidden="true"></span>
-              <span class="radio-text">Under £25k a year <span class="tag warn">Not a fit yet</span><br><small style="color: var(--text-mute); font-size: 0.85rem;">We'll send you the playbook instead.</small></span>
+              <span class="radio-text">Under £25k a year</span>
             </label>
             <label class="radio-opt">
               <input type="radio" name="revenue" value="25k-100k" />
@@ -867,24 +867,7 @@
 
       </form>
 
-      <!-- OUTCOME A: Not a fit, send playbook -->
-      <div class="outcome" id="outcomeNotFit" role="region" aria-live="polite">
-        <div class="outcome-card">
-          <span class="badge">Not yet</span>
-          <h2>Atom is not the right fit for you today. Here's something better.</h2>
-          <p>We work with coaches earning over £25k a year. Below that, you need a clearer offer first. I'm sending you the free 5 pillar playbook. It's the foundation we install for paying clients. Use it. When you cross £25k a year consistently, come back.</p>
-
-          <form class="pb-form" id="playbookForm">
-            <input type="email" id="playbookEmail" name="playbookEmail" placeholder="your@email.com" autocomplete="email" required />
-            <button class="btn btn-primary" type="submit">
-              <span class="btn-label">Send me the playbook</span>
-            </button>
-          </form>
-          <p style="margin-top: 16px; color: var(--text-mute); font-size: 0.86rem;">No spam. Unsubscribe in one click.</p>
-        </div>
-      </div>
-
-      <!-- OUTCOME B: Fit, show calendar -->
+      <!-- OUTCOME: show calendar to everyone who completes the audit -->
       <div class="outcome" id="outcomeFit" role="region" aria-live="polite">
         <div class="outcome-card">
           <span class="badge">We're a fit</span>
@@ -1165,26 +1148,20 @@
     document.getElementById('auditForm').style.display = 'none';
     document.querySelector('.progress').style.display = 'none';
 
-    if (revenueVal === 'under-25k') {
-      const a = document.getElementById('outcomeNotFit');
-      a.classList.add('active');
-      if (!REDUCED) animate(a, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: EASE_OUT });
-      a.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      const b = document.getElementById('outcomeFit');
-      const summary = document.getElementById('revenueSummary');
-      summary.innerHTML = 'You said: <strong>' + (revenueLabels[revenueVal] || 'over £25k a year') + '</strong>';
-      b.classList.add('active');
-      if (!REDUCED) animate(b, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: EASE_OUT });
-      b.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Everyone who completes the audit gets the booking calendar.
+    const b = document.getElementById('outcomeFit');
+    const summary = document.getElementById('revenueSummary');
+    summary.innerHTML = 'You said: <strong>' + (revenueLabels[revenueVal] || 'over £25k a year') + '</strong>';
+    b.classList.add('active');
+    if (!REDUCED) animate(b, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: EASE_OUT });
+    b.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Hide booking skeleton when iframe loads
-      const iframe = document.getElementById('bookingIframe');
-      const skel = document.getElementById('bookingSkeleton');
-      iframe.addEventListener('load', () => {
-        if (skel) { skel.style.opacity = '0'; skel.style.pointerEvents = 'none'; }
-      });
-    }
+    // Hide booking skeleton when iframe loads
+    const iframe = document.getElementById('bookingIframe');
+    const skel = document.getElementById('bookingSkeleton');
+    iframe.addEventListener('load', () => {
+      if (skel) { skel.style.opacity = '0'; skel.style.pointerEvents = 'none'; }
+    });
   }
 
   // When the GoHighLevel calendar reports a completed booking, send them to the homepage.
@@ -1197,37 +1174,6 @@
     if (/appointment|booking/i.test(blob) && /(book|schedul|confirm|success|complete)/i.test(blob)) {
       window.location.href = 'index.html';
     }
-  });
-
-  // Playbook capture form
-  document.getElementById('playbookForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const em = document.getElementById('playbookEmail').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
-      document.getElementById('playbookEmail').classList.add('error');
-      document.getElementById('playbookEmail').focus();
-      return;
-    }
-    const btn = e.target.querySelector('button');
-    btn.disabled = true;
-    btn.querySelector('.btn-label').textContent = 'Sending';
-
-    const fd = new FormData();
-    fd.append('email', em);
-    fd.append('list', 'atom-playbook-not-fit');
-    Object.entries(utmData).forEach(([k, v]) => fd.append(k, v));
-    try {
-      await fetch('https://madeeas.app.n8n.cloud/webhook/atom-intake', {
-        method: 'POST',
-        body: fd,
-        headers: { 'Accept': 'application/json' }
-      });
-    } catch (err) { /* non-blocking */ }
-
-    btn.querySelector('.btn-label').textContent = 'Sent. Check your inbox';
-    setTimeout(() => {
-      e.target.innerHTML = '<p style="margin: 0; color: var(--neon); font-family: var(--font-head); font-weight: 600;">Sent. Check your inbox in 2 minutes.</p>';
-    }, 600);
   });
 
   // Hover lift on submit button
