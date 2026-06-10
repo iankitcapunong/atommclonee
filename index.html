@@ -1960,27 +1960,26 @@
         .ft .statement { font-size: clamp(24px, 7vw, 36px); }
       }
 
-      /* ───────────────────────── The Community (masonry gallery) ───────────────────────── */
+      /* ───────────────────────── The Community (aligned gallery) ───────────────────────── */
       .community-grid {
-        column-count: 4;
-        column-gap: 16px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
         max-width: 1100px;
         margin: 0 auto 36px;
       }
-      @media (max-width: 1023px) { .community-grid { column-count: 3; } }
-      @media (max-width: 639px)  { .community-grid { column-count: 2; column-gap: 12px; } }
+      @media (max-width: 1023px) { .community-grid { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 639px)  { .community-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
       .community-tile {
-        break-inside: avoid;
-        margin: 0 0 16px;
+        aspect-ratio: 1 / 1;
         border-radius: var(--radius-card);
         overflow: hidden;
         border: 1px solid var(--rule-soft);
         background: var(--paper-2);
         position: relative;
-        display: block;
-        transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out), border-color .4s var(--ease-out);
+        cursor: pointer;
+        transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), border-color .35s var(--ease-out);
       }
-      @media (max-width: 639px) { .community-tile { margin-bottom: 12px; } }
       .community-tile:hover {
         transform: translateY(-3px);
         border-color: oklch(60% 0.10 215 / 0.6);
@@ -1988,10 +1987,52 @@
       }
       .community-tile img,
       .community-tile video {
-        width: 100%;
-        height: auto;
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: center 35%;
         display: block;
       }
+      /* play badge on video tiles */
+      .community-tile.is-video::after {
+        content: "";
+        position: absolute; left: 50%; top: 50%;
+        width: 54px; height: 54px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        background: oklch(8% 0.015 220 / 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center / 24px no-repeat;
+        border: 1px solid oklch(100% 0 0 / 0.35);
+        pointer-events: none;
+        transition: transform .3s var(--ease-out);
+      }
+      .community-tile.is-video:hover::after { transform: translate(-50%, -50%) scale(1.1); }
+
+      /* Lightbox / modal */
+      .lightbox {
+        position: fixed; inset: 0; z-index: 200;
+        display: none; align-items: center; justify-content: center;
+        padding: 24px;
+        background: oklch(4% 0.01 220 / 0.9);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      }
+      .lightbox.open { display: flex; }
+      .lightbox-content { max-width: min(1100px, 94vw); max-height: 88vh; }
+      .lightbox-content img,
+      .lightbox-content video {
+        max-width: 94vw; max-height: 88vh;
+        width: auto; height: auto; display: block; margin: 0 auto;
+        border-radius: var(--radius-card);
+        box-shadow: 0 30px 90px -20px oklch(0% 0 0 / 0.8);
+      }
+      .lightbox-close {
+        position: absolute; top: 16px; right: 22px;
+        width: 46px; height: 46px;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: oklch(11% 0.018 220 / 0.75); color: var(--ink);
+        border: 1px solid var(--rule); border-radius: 999px;
+        font-size: 24px; line-height: 1; cursor: pointer;
+        transition: background .2s var(--ease-out), border-color .2s var(--ease-out);
+      }
+      .lightbox-close:hover { background: oklch(16% 0.022 220 / 0.9); border-color: var(--accent); }
       .community-cap {
         text-align: center;
         color: var(--ink-3);
@@ -2528,6 +2569,12 @@
       </div>
     </footer>
 
+    <!-- Community lightbox / modal -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Media viewer">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
+      <div class="lightbox-content" id="lightboxContent"></div>
+    </div>
+
     <script>
       // Year stamp
       document.getElementById('year').textContent = new Date().getFullYear();
@@ -2689,6 +2736,53 @@
           } catch (_) { /* cross-origin: assume it loaded */ return; }
           fallback.hidden = false;
         }, 6000);
+      })();
+
+      // Community gallery lightbox — click a tile to view the image/video full size.
+      (function () {
+        var lb = document.getElementById('lightbox');
+        var content = document.getElementById('lightboxContent');
+        var closeBtn = document.getElementById('lightboxClose');
+        if (!lb || !content) return;
+
+        function openWith(node) {
+          content.innerHTML = '';
+          content.appendChild(node);
+          lb.classList.add('open');
+          lb.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+        function close() {
+          lb.classList.remove('open');
+          lb.setAttribute('aria-hidden', 'true');
+          content.innerHTML = '';
+          document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.community-tile').forEach(function (tile) {
+          var video = tile.querySelector('video');
+          if (video) tile.classList.add('is-video');
+          tile.addEventListener('click', function () {
+            if (video) {
+              var srcEl = video.querySelector('source');
+              var v = document.createElement('video');
+              v.src = srcEl ? srcEl.src : '';
+              v.controls = true; v.autoplay = true; v.loop = true; v.playsInline = true;
+              openWith(v);
+            } else {
+              var img = tile.querySelector('img');
+              if (!img) return;
+              var i = document.createElement('img');
+              i.src = img.currentSrc || img.src;
+              i.alt = img.alt || '';
+              openWith(i);
+            }
+          });
+        });
+
+        closeBtn.addEventListener('click', close);
+        lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
       })();
     </script>
 
