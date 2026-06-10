@@ -538,7 +538,6 @@
   .booking-iframe iframe {
     display: block;
     width: 100%;
-    height: 100%;
     min-height: 720px;
     border: 0;
   }
@@ -882,11 +881,11 @@
             <span>Calendar loading</span>
           </div>
           <iframe
-            id="bookingIframe"
+            id="ok9wwh9gxmQ8Rjqhdelx_1749700000000"
             data-src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
             title="Book a discovery call with Elom"
             scrolling="no"
-            style="width: 100%; height: 100%; min-height: 720px; border: 0; position: relative; z-index: 2;"
+            style="width: 100%; min-height: 720px; border: 0; overflow: hidden; position: relative; z-index: 2;"
           ></iframe>
           <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
         </div>
@@ -1047,7 +1046,7 @@
 
   // Preload the booking calendar in the background so it's ready the moment
   // the audit is finished, instead of starting to load only after submit.
-  const bookingIframe = document.getElementById('bookingIframe');
+  const bookingIframe = document.querySelector('#bookingFrame iframe');
   const bookingSkeleton = document.getElementById('bookingSkeleton');
   let calendarPreloaded = false;
   function hideSkeleton() {
