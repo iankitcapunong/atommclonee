@@ -1,193 +1,1244 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex" />
-<title>Client Intake — CAYA Fitness</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Atom is for coaches earning over £25k a year. Take the 2 minute audit before you book a discovery call." />
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:title" content="Atom audit, see if we are a fit before you book a call" />
+<meta property="og:description" content="5 quick questions. Honest answers. Free, no commitment." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Atom" />
+
+<title>Atom audit, see if we are a fit before you book a call</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.leadconnectorhq.com" crossorigin />
+<link rel="preconnect" href="https://link.msgsndr.com" crossorigin />
+<link rel="dns-prefetch" href="https://api.leadconnectorhq.com" />
+<link rel="dns-prefetch" href="https://link.msgsndr.com" />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='14' y='28' width='36' height='28' rx='5' fill='%2300d4ff'/%3E%3Cpath d='M22 28 V20 a10 10 0 0 1 20 0 V28' fill='none' stroke='%2300d4ff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='40' r='3' fill='%230a0a0a'/%3E%3Crect x='30.5' y='40' width='3' height='7' fill='%230a0a0a'/%3E%3C/svg%3E" />
+
 <style>
-  :root{
-    --bg:#0a0a0a; --soft:#0d0f12; --panel:#121212; --line:#ffffff14; --line2:#ffffff29;
-    --txt:#fff; --mut:#ffffffa8; --neon:#00d4ff; --ok:#00d68f;
-    --head:"Outfit",-apple-system,Segoe UI,sans-serif; --sans:"Inter",-apple-system,Segoe UI,Roboto,sans-serif;
+  :root {
+    --neon: #00d4ff;
+    --neon-soft: rgba(0, 212, 255, 0.18);
+    --neon-deep: #0099c4;
+    --neon-glow: rgba(0, 212, 255, 0.35);
+    --bg: #0a0a0a;
+    --bg-2: #111417;
+    --bg-3: #161a1f;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --text: #ffffff;
+    --text-soft: rgba(255, 255, 255, 0.82);
+    --text-mute: rgba(255, 255, 255, 0.6);
+    --danger: #ff6b6b;
+    --shadow: 0 18px 60px rgba(0, 212, 255, 0.18);
+    --radius: 18px;
+    --maxw: 760px;
+    --gutter: clamp(20px, 5vw, 56px);
+    --font-head: "Outfit", system-ui, -apple-system, sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
   }
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;font-family:var(--sans);color:var(--txt);
-    background:radial-gradient(1100px 560px at 72% -12%,#0099c422,transparent 60%),
-               radial-gradient(820px 460px at -10% 112%,#6b6bff14,transparent 55%),var(--bg);
-    -webkit-font-smoothing:antialiased;padding:28px 16px 64px}
-  .wrap{max-width:620px;margin:0 auto}
-  .brand{display:flex;align-items:center;gap:11px;margin:8px 2px 22px}
-  .logo{width:34px;height:34px;filter:drop-shadow(0 0 9px #00d4ff66)}
-  .bn{font-family:var(--head);font-weight:800;font-size:20px}
-  .bn .d{color:var(--neon)}
-  .bsub{font-size:12px;color:var(--mut);font-weight:600;letter-spacing:.12em;text-transform:uppercase}
-  h1{font-family:var(--head);font-weight:800;font-size:27px;letter-spacing:-.02em;margin:4px 0 6px}
-  .lede{color:var(--mut);font-size:14.5px;line-height:1.55;margin:0 0 22px}
-  .card{background:linear-gradient(180deg,#ffffff07,#ffffff02),var(--panel);border:1px solid var(--line);
-    border-radius:18px;padding:22px;box-shadow:0 20px 50px #00000055}
-  .grp{margin-bottom:16px}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:520px){.row2{grid-template-columns:1fr}}
-  label{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin:0 0 7px}
-  label .req{color:var(--neon);margin-left:3px}
-  input,select,textarea{width:100%;background:var(--soft);border:1px solid var(--line2);color:var(--txt);
-    border-radius:11px;padding:12px 13px;font-family:var(--sans);font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
-  input:focus,select:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 3px #00d4ff22}
-  textarea{resize:vertical;min-height:74px}
-  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);
-    background-position:calc(100% - 18px) 18px,calc(100% - 13px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
-  .btn{width:100%;margin-top:8px;cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px;color:#04222b;
-    border:none;border-radius:11px;padding:14px;background:linear-gradient(180deg,#2fe0ff,var(--neon));
-    box-shadow:0 8px 24px #00d4ff33,inset 0 1px 0 #ffffff66;transition:filter .12s,transform .12s}
-  .btn:hover{filter:brightness(1.05)} .btn:active{transform:translateY(1px)} .btn:disabled{opacity:.6;cursor:progress}
-  .note{margin-top:14px;font-size:12px;color:var(--mut);line-height:1.55;text-align:center}
-  .err{margin-top:14px;background:#ff557712;border:1px solid #ff557733;color:#ffc6d2;border-radius:11px;padding:12px 14px;font-size:13px}
-  .ok-screen{text-align:center;padding:40px 22px}
-  .ok-ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;margin:0 auto 18px;
-    background:#00d68f1f;color:var(--ok);box-shadow:inset 0 0 0 1px #00d68f44}
-  .hide{display:none}
-  .secure{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.04em;
-    color:var(--ok);background:#00d68f10;border:1px solid #00d68f2e;padding:5px 11px;border-radius:999px;margin-bottom:16px}
-  .dot{width:7px;height:7px;border-radius:999px;background:var(--ok);box-shadow:0 0 8px var(--ok)}
-  .cal-wrap{max-width:920px}
-  .cal-frame{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 20px 50px #00000055}
-  .cal-frame iframe{width:100%;min-height:740px;border:0;display:block}
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background:
+      radial-gradient(60% 60% at 30% 0%, var(--neon-soft) 0%, transparent 60%),
+      radial-gradient(40% 50% at 80% 10%, color-mix(in srgb, var(--neon) 18%, transparent) 0%, transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    margin: 0 0 0.5em;
+  }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); }
+  h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+  h3 { font-size: clamp(1.05rem, 1.8vw, 1.25rem); }
+  p  { margin: 0 0 1em; color: var(--text-soft); }
+
+  a {
+    color: var(--neon);
+    text-decoration: none;
+    transition: color .2s var(--ease-out);
+  }
+  a:hover { text-decoration: underline; }
+
+  /* SKIP LINK */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 16px;
+    background: var(--neon);
+    color: #001218;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-family: var(--font-head);
+    font-weight: 600;
+    z-index: 100;
+    transition: top .2s var(--ease-out);
+  }
+  .skip-link:focus { top: 16px; }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    position: relative;
+  }
+
+  /* HEADER */
+  .top {
+    padding: 20px 0;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .brand svg { width: 28px; height: 28px; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: clamp(24px, 6vw, 56px) 0 clamp(28px, 5vw, 48px);
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--neon-soft);
+    color: var(--neon);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid color-mix(in srgb, var(--neon) 35%, transparent);
+  }
+  .hero h1 { margin: 18px auto 16px; max-width: 22ch; }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--neon), #5be8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .hero p.lede {
+    font-size: clamp(1rem, 1.4vw, 1.1rem);
+    max-width: 52ch;
+    margin: 0 auto;
+    color: var(--text-soft);
+  }
+
+  /* PROGRESS BAR */
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 28px;
+    max-width: 340px;
+    justify-content: center;
+  }
+  .progress-step {
+    width: 32px;
+    height: 4px;
+    background: var(--line-strong);
+    border-radius: 2px;
+    transition: background .35s var(--ease-out);
+  }
+  .progress-step.active { background: var(--neon); box-shadow: 0 0 12px var(--neon-glow); }
+
+  /* SHIFT CARD (form question card) */
+  .shift-card {
+    position: relative;
+    background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02) 55%, var(--neon-soft));
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: clamp(22px, 4vw, 32px);
+    margin-bottom: 18px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    overflow: hidden;
+    transition: border-color .4s var(--ease-out), transform .35s var(--ease-out), box-shadow .4s var(--ease-out);
+    opacity: 0;
+    transform: translateY(28px);
+    will-change: transform, opacity;
+  }
+  .shift-card.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .shift-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+    pointer-events: none;
+  }
+  .shift-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    background: radial-gradient(circle at 50% 0%, var(--neon-glow), transparent 55%);
+    opacity: 0;
+    transition: opacity .5s var(--ease-out);
+    pointer-events: none;
+  }
+  .shift-card.focused::after { opacity: 0.4; }
+  .shift-card.focused {
+    border-color: color-mix(in srgb, var(--neon) 40%, transparent);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.4), 0 0 24px var(--neon-glow);
+  }
+
+  .q-num {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 8px;
+  }
+  .q-label {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    color: var(--text);
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .q-help {
+    color: var(--text-mute);
+    font-size: 0.92rem;
+    margin: -12px 0 18px;
+  }
+
+  /* INPUTS */
+  .field {
+    display: block;
+    margin-bottom: 14px;
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+  }
+  input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color .2s var(--ease-out), box-shadow .2s var(--ease-out), background .2s var(--ease-out);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+    font-family: var(--font-body);
+  }
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--neon);
+    box-shadow: 0 0 0 4px var(--neon-soft);
+    background: var(--bg-3);
+  }
+  input.error, textarea.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.18);
+  }
+  .err-msg {
+    display: none;
+    color: var(--danger);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .err-msg.show { display: block; }
+
+  /* RADIO OPTIONS */
+  .radio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .radio-opt {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .2s var(--ease-out), background .2s var(--ease-out), transform .15s var(--ease-out);
+  }
+  .radio-opt:hover {
+    border-color: color-mix(in srgb, var(--neon) 35%, transparent);
+    background: var(--bg-3);
+  }
+  .radio-opt input[type="radio"],
+  .radio-opt input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .radio-mark {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--line-strong);
+    margin-top: 2px;
+    position: relative;
+    transition: border-color .2s var(--ease-out), background .2s var(--ease-out);
+  }
+  .check-mark {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--line-strong);
+    margin-top: 2px;
+    position: relative;
+    transition: border-color .2s var(--ease-out), background .2s var(--ease-out);
+  }
+  .radio-opt input[type="radio"]:checked + .radio-mark {
+    border-color: var(--neon);
+    background: var(--neon);
+  }
+  .radio-opt input[type="radio"]:checked + .radio-mark::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: var(--bg);
+    border-radius: 50%;
+  }
+  .radio-opt input[type="checkbox"]:checked + .check-mark {
+    border-color: var(--neon);
+    background: var(--neon);
+  }
+  .radio-opt input[type="checkbox"]:checked + .check-mark::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--bg);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .radio-opt:has(input[type="radio"]:checked),
+  .radio-opt:has(input[type="checkbox"]:checked) {
+    border-color: var(--neon);
+    background: linear-gradient(155deg, var(--neon-soft), transparent 70%);
+    box-shadow: 0 0 24px var(--neon-glow);
+  }
+  .radio-opt input[type="radio"]:focus-visible + .radio-mark,
+  .radio-opt input[type="checkbox"]:focus-visible + .check-mark {
+    box-shadow: 0 0 0 3px var(--neon-soft);
+  }
+  .radio-text {
+    color: var(--text);
+    font-size: 0.97rem;
+    line-height: 1.4;
+  }
+  .radio-text .tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--neon-soft);
+    color: var(--neon);
+    font-size: 0.72rem;
+    font-family: var(--font-head);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .radio-text .tag.warn {
+    background: rgba(255, 107, 107, 0.16);
+    color: var(--danger);
+  }
+
+  /* CONDITIONAL FIELD */
+  .conditional {
+    margin-top: 14px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .35s var(--ease-out), opacity .25s var(--ease-out);
+  }
+  .conditional.open {
+    max-height: 240px;
+    opacity: 1;
+  }
+
+  /* SUBMIT */
+  .form-actions {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 1.02rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out), background .25s var(--ease-out), color .25s var(--ease-out);
+    text-decoration: none;
+    will-change: transform, box-shadow;
+  }
+  .btn-primary {
+    background: var(--neon);
+    color: #001218;
+    box-shadow: var(--shadow);
+  }
+  .btn-primary:hover { text-decoration: none; transform: translateY(-2px); box-shadow: 0 22px 60px rgba(0,212,255,0.32); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line-strong);
+  }
+  .btn-ghost:hover { background: var(--bg-2); text-decoration: none; }
+
+  /* SUBMITTING SPINNER */
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0,18,24,0.3);
+    border-top-color: #001218;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* OUTCOME SCREENS */
+  .outcome { display: none; }
+  .outcome.active { display: block; }
+  .outcome-card {
+    text-align: center;
+    padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 40px);
+    background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02) 55%, var(--neon-soft));
+    border: 1px solid color-mix(in srgb, var(--neon) 30%, transparent);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45), 0 0 40px var(--neon-glow);
+    margin-bottom: 18px;
+  }
+  .outcome-card .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--neon-soft);
+    color: var(--neon);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .outcome-card h2 {
+    max-width: 22ch;
+    margin: 0 auto 16px;
+  }
+  .outcome-card p {
+    max-width: 56ch;
+    margin: 0 auto 20px;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+  }
+  .summary {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--bg-2);
+    color: var(--text-mute);
+    font-size: 0.86rem;
+    font-family: var(--font-head);
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid var(--line);
+  }
+  .summary strong { color: var(--neon); font-weight: 600; }
+
+  /* PLAYBOOK CAPTURE */
+  .pb-form {
+    display: flex;
+    gap: 10px;
+    max-width: 460px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .pb-form input[type="email"] { flex: 1 1 220px; min-width: 0; }
+
+  /* BOOKING IFRAME */
+  .booking-iframe {
+    position: relative;
+    width: 100%;
+    min-height: 720px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-2);
+    margin: 24px 0 8px;
+  }
+  .booking-iframe iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 720px;
+    border: 0;
+  }
+  .booking-skeleton {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--bg-2);
+    color: var(--text-mute);
+    font-family: var(--font-head);
+    z-index: 1;
+    transition: opacity .3s ease;
+  }
+  .skeleton-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--line-strong);
+    border-top-color: var(--neon);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .calendar-note {
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 0.9rem;
+    margin-top: 8px;
+  }
+  .calendar-note svg { vertical-align: -3px; margin-right: 6px; color: var(--neon); }
+
+  /* FOOTER */
+  .foot {
+    padding: 48px 0 36px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    margin-top: 48px;
+  }
+  .foot .brand { justify-content: center; margin-bottom: 12px; }
+  .foot small {
+    display: block;
+    color: var(--text-mute);
+    font-size: 0.82rem;
+  }
+
+  /* BREAKPOINTS */
+  @media (min-width: 375px) {
+    body { font-size: 16px; }
+    .shift-card { padding: 24px; }
+    .radio-opt { padding: 14px 16px; }
+  }
+  @media (min-width: 560px) {
+    .hero { padding: clamp(40px, 7vw, 72px) 0 clamp(32px, 6vw, 56px); }
+    .shift-card { padding: 28px; }
+    .pb-form { flex-wrap: nowrap; }
+  }
+  @media (min-width: 900px) {
+    :root { --maxw: 820px; }
+    .shift-card { padding: 32px; }
+  }
+  @media (min-width: 1200px) {
+    :root { --maxw: 880px; }
+  }
+
+  /* REDUCED MOTION */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .shift-card { opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="brand">
-    <img class="logo" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='14' y='28' width='36' height='28' rx='5' fill='%2300d4ff'/%3E%3Cpath d='M22 28 V20 a10 10 0 0 1 20 0 V28' fill='none' stroke='%2300d4ff' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='40' r='3' fill='%230a0a0a'/%3E%3Crect x='30.5' y='40' width='3' height='7' fill='%230a0a0a'/%3E%3C/svg%3E" />
-    <div><div class="bn">Atom<span class="d">.</span></div><div class="bsub">CAYA Fitness</div></div>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="ATOM home">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="14" y="28" width="36" height="28" rx="5" fill="currentColor" style="color: var(--neon);"/>
+        <path d="M22 28 V20 a10 10 0 0 1 20 0 V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" style="color: var(--neon);"/>
+        <circle cx="32" cy="40" r="3" fill="var(--bg)"/>
+        <rect x="30.5" y="40" width="3" height="7" fill="var(--bg)"/>
+      </svg>
+      ATOM
+    </a>
   </div>
+</header>
 
-  <div id="form-view">
-    <span class="secure"><span class="dot"></span> Secure intake</span>
-    <h1 id="hello">Welcome — let's get you set up.</h1>
-    <p class="lede">A few quick questions so your coach can build the right plan from day one. Takes about 3 minutes. Everything goes straight to your coach.</p>
+<main id="main">
 
-    <form id="intake" class="card" autocomplete="on">
-      <div class="row2">
-        <div class="grp"><label>Full name<span class="req">*</span></label><input name="name" required /></div>
-        <div class="grp"><label>Email<span class="req">*</span></label><input name="email" type="email" required /></div>
-      </div>
-      <div class="row2">
-        <div class="grp"><label>Phone</label><input name="phone" inputmode="tel" /></div>
-        <div class="grp"><label>Date of birth</label><input name="dob" placeholder="DD / MM / YYYY" /></div>
-      </div>
-      <div class="grp"><label>Primary goal<span class="req">*</span></label>
-        <select name="goal" required>
-          <option value="">Choose one…</option>
-          <option>Fat loss</option><option>Muscle gain</option><option>Performance / sport</option>
-          <option>General health &amp; energy</option><option>Other</option>
-        </select>
-      </div>
-      <div class="row2">
-        <div class="grp"><label>Current weight</label><input name="current_weight" placeholder="e.g. 82 kg" /></div>
-        <div class="grp"><label>Goal weight</label><input name="goal_weight" placeholder="e.g. 74 kg" /></div>
-      </div>
-      <div class="row2">
-        <div class="grp"><label>Height</label><input name="height" placeholder="e.g. 178 cm" /></div>
-        <div class="grp"><label>Training experience</label>
-          <select name="experience">
-            <option value="">Choose…</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option>
-          </select>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="grp"><label>Days/week you can train</label>
-          <select name="days"><option value="">Choose…</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
-        </div>
-        <div class="grp"><label>Preferred times</label><input name="times" placeholder="e.g. Early mornings" /></div>
-      </div>
-      <div class="grp"><label>Any injuries or health conditions? (PAR-Q)</label>
-        <textarea name="health" placeholder="Injuries, medications, conditions, or 'none'"></textarea></div>
-      <div class="grp"><label>Dietary restrictions / preferences</label>
-        <input name="diet" placeholder="e.g. Vegetarian, no dairy" /></div>
-      <div class="grp"><label>Biggest challenge or anything else your coach should know</label>
-        <textarea name="notes"></textarea></div>
-
-      <button class="btn" id="submit" type="submit">Submit intake</button>
-      <div id="err" class="err hide"></div>
-      <p class="note">🔒 Sent securely to your coach. We don't store this anywhere else.</p>
-    </form>
-  </div>
-
-  <div id="cal-view" class="hide">
-    <span class="secure"><span class="dot"></span> Intake received</span>
-    <h1>Last step — pick your time.</h1>
-    <p class="lede">Choose a slot that suits you. Once you're booked we'll take you back to the homepage.</p>
-    <div class="cal-frame">
-      <iframe id="cal-iframe" title="Book your discovery call" scrolling="no"
-        data-src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"></iframe>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">2 minute audit</span>
+      <h1>Before we book a call, let's see if Atom is even a <span class="accent">fit</span>.</h1>
+      <p class="lede">5 quick questions. Honest answers. Free, no commitment. If we are a fit, you book a discovery call on the next screen.</p>
     </div>
-  </div>
-</div>
+  </section>
 
-<script>
-  var ENDPOINT = "https://madeeas.app.n8n.cloud/webhook/atom-intake";
-  var q = new URLSearchParams(location.search);
-  var cid = q.get("cid") || "";
-  var nm = q.get("name") || "";
-  if (nm) {
-    document.querySelector('[name=name]').value = nm;
-    document.getElementById('hello').textContent = "Welcome, " + nm.split(" ")[0] + " — let's get you set up.";
+  <section id="audit-section">
+    <div class="wrap">
+
+      <div class="progress" aria-hidden="true">
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+      </div>
+
+      <form id="auditForm" novalidate aria-label="Atom fit audit">
+
+        <!-- Q1 CONTACT BASICS -->
+        <div class="shift-card" data-card>
+          <div class="q-num">Question 1 of 5</div>
+          <div class="q-label">Tell us who you are.</div>
+
+          <div class="field">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" autocomplete="given-name" required aria-required="true" aria-describedby="firstName-err" />
+            <div class="err-msg" id="firstName-err">Please add your first name.</div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="email-err" />
+            <div class="err-msg" id="email-err">Please add a valid email address.</div>
+          </div>
+
+          <div class="field">
+            <label for="instagram">Instagram handle</label>
+            <input type="text" id="instagram" name="instagram" value="@" autocomplete="off" required aria-required="true" aria-describedby="instagram-err" />
+            <div class="err-msg" id="instagram-err">Please add your Instagram handle.</div>
+          </div>
+        </div>
+
+        <!-- Q2 ANNUAL REVENUE -->
+        <div class="shift-card" data-card>
+          <div class="q-num">Question 2 of 5</div>
+          <div class="q-label">What's your annual revenue?</div>
+
+          <div class="radio-list" role="radiogroup" aria-required="true" aria-describedby="revenue-err">
+            <label class="radio-opt">
+              <input type="radio" name="revenue" value="under-25k" required />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Under £25k a year <span class="tag warn">Not a fit yet</span><br><small style="color: var(--text-mute); font-size: 0.85rem;">We'll send you the playbook instead.</small></span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="revenue" value="25k-100k" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">£25k to £100k a year</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="revenue" value="100k-250k" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">£100k to £250k a year</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="revenue" value="250k-500k" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">£250k to £500k a year</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="revenue" value="500k-plus" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">£500k+ a year</span>
+            </label>
+          </div>
+          <div class="err-msg" id="revenue-err">Pick the band that fits today.</div>
+        </div>
+
+        <!-- Q3 SOCIAL PLATFORMS (multi-select) -->
+        <div class="shift-card" data-card>
+          <div class="q-num">Question 3 of 5</div>
+          <div class="q-label">Which social platforms do you post on?</div>
+          <p class="q-help">Pick all that apply.</p>
+
+          <div class="radio-list" role="group" aria-required="true" aria-describedby="socials-err">
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="instagram" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">Instagram</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="tiktok" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">TikTok</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="youtube" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">YouTube</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="linkedin" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">LinkedIn</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="facebook" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">Facebook</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="x" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">X (Twitter)</span>
+            </label>
+            <label class="radio-opt">
+              <input type="checkbox" name="socials" value="other" />
+              <span class="check-mark" aria-hidden="true"></span>
+              <span class="radio-text">Other (specify below)</span>
+            </label>
+          </div>
+          <div class="err-msg" id="socials-err">Pick at least one.</div>
+
+          <div class="conditional" id="socialsOther">
+            <div class="field" style="margin-top: 16px;">
+              <label for="socialsOtherText">Which other platforms?</label>
+              <input type="text" id="socialsOtherText" name="socialsOtherText" placeholder="Threads, Pinterest, Substack, etc." />
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 BUSINESS DURATION -->
+        <div class="shift-card" data-card>
+          <div class="q-num">Question 4 of 5</div>
+          <div class="q-label">How long has your business been running?</div>
+
+          <div class="radio-list" role="radiogroup" aria-required="true" aria-describedby="duration-err">
+            <label class="radio-opt">
+              <input type="radio" name="duration" value="under-6m" required />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Under 6 months</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="duration" value="6-12m" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">6 to 12 months</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="duration" value="1-2y" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">1 to 2 years</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="duration" value="2-5y" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">2 to 5 years</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="duration" value="5y-plus" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">5+ years</span>
+            </label>
+          </div>
+          <div class="err-msg" id="duration-err">Pick the one that fits today.</div>
+        </div>
+
+        <!-- Q5 SOURCE -->
+        <div class="shift-card" data-card>
+          <div class="q-num">Question 5 of 5</div>
+          <div class="q-label">How did you hear about Atom?</div>
+
+          <div class="radio-list" role="radiogroup" aria-required="true" aria-describedby="source-err">
+            <label class="radio-opt">
+              <input type="radio" name="source" value="instagram" required />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Instagram</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="tiktok" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">TikTok</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="youtube" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">YouTube</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="referral" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">A referral</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="google" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Google</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="podcast" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Podcast</span>
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="source" value="other" />
+              <span class="radio-mark" aria-hidden="true"></span>
+              <span class="radio-text">Something else (specify below)</span>
+            </label>
+          </div>
+          <div class="err-msg" id="source-err">Pick one so we know what's working.</div>
+
+          <div class="conditional" id="sourceOther">
+            <div class="field" style="margin-top: 16px;">
+              <label for="sourceOtherText">Tell us where</label>
+              <input type="text" id="sourceOtherText" name="sourceOtherText" placeholder="Event, newsletter, friend, etc." />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="submitBtn">
+            <span class="btn-label">See if we're a fit</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- OUTCOME A: Not a fit, send playbook -->
+      <div class="outcome" id="outcomeNotFit" role="region" aria-live="polite">
+        <div class="outcome-card">
+          <span class="badge">Not yet</span>
+          <h2>Atom is not the right fit for you today. Here's something better.</h2>
+          <p>We work with coaches earning over £25k a year. Below that, you need a clearer offer first. I'm sending you the free 5 pillar playbook. It's the foundation we install for paying clients. Use it. When you cross £25k a year consistently, come back.</p>
+
+          <form class="pb-form" id="playbookForm">
+            <input type="email" id="playbookEmail" name="playbookEmail" placeholder="your@email.com" autocomplete="email" required />
+            <button class="btn btn-primary" type="submit">
+              <span class="btn-label">Send me the playbook</span>
+            </button>
+          </form>
+          <p style="margin-top: 16px; color: var(--text-mute); font-size: 0.86rem;">No spam. Unsubscribe in one click.</p>
+        </div>
+      </div>
+
+      <!-- OUTCOME B: Fit, show calendar -->
+      <div class="outcome" id="outcomeFit" role="region" aria-live="polite">
+        <div class="outcome-card">
+          <span class="badge">We're a fit</span>
+          <h2>We're a fit. Here's the calendar.</h2>
+          <div class="summary" id="revenueSummary"></div>
+          <p id="outcomeBody">Based on your numbers, you're ready for the next stage. Book a 20 minute discovery call below. I listen first, no pitch. If we're a fit, you get a tailored 30 day plan within 48 hours. If not, you walk with notes you can use today.</p>
+        </div>
+
+        <div class="booking-iframe" id="bookingFrame" aria-label="Book a discovery call calendar">
+          <div class="booking-skeleton" id="bookingSkeleton" aria-hidden="true">
+            <span class="skeleton-spinner"></span>
+            <span>Calendar loading</span>
+          </div>
+          <iframe
+            id="bookingIframe"
+            src="https://api.leadconnectorhq.com/widget/booking/ok9wwh9gxmQ8Rjqhdelx"
+            title="Book a discovery call with Elom"
+            loading="lazy"
+            scrolling="no"
+            style="width: 100%; height: 100%; min-height: 720px; border: 0; position: relative; z-index: 2;"
+          ></iframe>
+          <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
+        </div>
+        <p class="calendar-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Calls open after 1pm UK time, every weekday.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="brand" aria-label="ATOM">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="14" y="28" width="36" height="28" rx="5" fill="currentColor" style="color: var(--neon);"/>
+        <path d="M22 28 V20 a10 10 0 0 1 20 0 V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" style="color: var(--neon);"/>
+        <circle cx="32" cy="40" r="3" fill="var(--bg)"/>
+        <rect x="30.5" y="40" width="3" height="7" fill="var(--bg)"/>
+      </svg>
+      ATOM
+    </div>
+    <small>atom4u.ai &middot; A Madeea brand &middot; Built for online coaches</small>
+  </div>
+</footer>
+
+<script type="module">
+  import { animate, inView, stagger } from "https://cdn.jsdelivr.net/npm/motion@11.11.17/+esm";
+
+  // Motion v11 polyfill for hover
+  function hover(el, onEnter) {
+    if (!el || !onEnter) return;
+    let cleanup = null;
+    el.addEventListener('mouseenter', function () { cleanup = onEnter(); });
+    el.addEventListener('mouseleave', function () { if (typeof cleanup === 'function') cleanup(); });
   }
 
-  var form = document.getElementById("intake");
-  var btn = document.getElementById("submit");
-  var errEl = document.getElementById("err");
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const EASE_OUT = [0.22, 1, 0.36, 1];
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    errEl.classList.add("hide");
-    var data = { cid: cid };
-    new FormData(form).forEach(function (v, k) { data[k] = String(v || "").trim(); });
-    if (!data.name || !data.email) { showErr("Please add your name and email."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { showErr("That email doesn't look right."); return; }
+  // Capture UTM params (for handoff to GHL webhook later)
+  const params = new URLSearchParams(window.location.search);
+  const utmData = {
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_term: params.get('utm_term') || '',
+    referrer: document.referrer || ''
+  };
 
-    btn.disabled = true; btn.textContent = "Sending…";
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    })
-    .then(function (r) { return r.json().catch(function () { return {}; }); })
-    .then(function (res) {
-      if (res && res.ok) {
-        showCalendar();
-      } else { throw new Error((res && res.error) || "failed"); }
-    })
-    .catch(function () {
-      showErr("Something went wrong sending that. Please try again in a moment.");
-      btn.disabled = false; btn.textContent = "Submit intake";
+  // Scroll fade reveal on each shift-card
+  (function () {
+    const cards = document.querySelectorAll('.shift-card');
+    if (REDUCED) {
+      cards.forEach(c => c.classList.add('in'));
+      return;
+    }
+    cards.forEach(c => {
+      const r = c.getBoundingClientRect();
+      if (r.top < window.innerHeight * 1.1 && r.bottom > 0) {
+        c.classList.add('in');
+        c.style.opacity = '1';
+        c.style.transform = 'none';
+      }
     });
+    cards.forEach((c, i) => {
+      if (c.classList.contains('in')) return;
+      inView(c, () => {
+        animate(c, { opacity: [0, 1], y: [28, 0] }, { duration: 0.6, easing: EASE_OUT });
+        c.classList.add('in');
+      }, { amount: 0.15 });
+    });
+    // Safety net
+    setTimeout(() => {
+      document.querySelectorAll('.shift-card:not(.in)').forEach(c => {
+        c.classList.add('in');
+        c.style.opacity = '1';
+        c.style.transform = 'none';
+      });
+    }, 2500);
+  })();
+
+  // Focused glow on shift-card when any inner input has focus
+  (function () {
+    document.querySelectorAll('[data-card]').forEach(card => {
+      const inputs = card.querySelectorAll('input, textarea');
+      inputs.forEach(inp => {
+        inp.addEventListener('focus', () => card.classList.add('focused'));
+        inp.addEventListener('blur', () => {
+          setTimeout(() => {
+            if (!card.contains(document.activeElement)) card.classList.remove('focused');
+          }, 80);
+        });
+      });
+    });
+  })();
+
+  // Conditional "Other" fields
+  function bindConditionalRadio(radioName, otherValue, conditionalId) {
+    const cond = document.getElementById(conditionalId);
+    document.querySelectorAll('input[name="' + radioName + '"]').forEach(r => {
+      r.addEventListener('change', () => {
+        if (r.value === otherValue && r.checked) cond.classList.add('open');
+        else if (r.checked) cond.classList.remove('open');
+      });
+    });
+  }
+  function bindConditionalCheckbox(checkboxName, otherValue, conditionalId) {
+    const cond = document.getElementById(conditionalId);
+    document.querySelectorAll('input[name="' + checkboxName + '"]').forEach(c => {
+      c.addEventListener('change', () => {
+        const other = document.querySelector('input[name="' + checkboxName + '"][value="' + otherValue + '"]');
+        if (other && other.checked) cond.classList.add('open');
+        else cond.classList.remove('open');
+      });
+    });
+  }
+  bindConditionalCheckbox('socials', 'other', 'socialsOther');
+  bindConditionalRadio('source', 'other', 'sourceOther');
+
+  // Progress bar tracks completed questions
+  (function () {
+    const steps = document.querySelectorAll('.progress-step');
+    function update() {
+      const q1 = document.getElementById('firstName').value.trim()
+        && document.getElementById('email').value.trim()
+        && document.getElementById('instagram').value.trim().length > 1;
+      const q2 = !!document.querySelector('input[name="revenue"]:checked');
+      const q3 = document.querySelectorAll('input[name="socials"]:checked').length > 0;
+      const q4 = !!document.querySelector('input[name="duration"]:checked');
+      const q5 = !!document.querySelector('input[name="source"]:checked');
+      [q1, q2, q3, q4, q5].forEach((done, i) => {
+        steps[i].classList.toggle('active', !!done);
+      });
+    }
+    document.getElementById('auditForm').addEventListener('input', update);
+    document.getElementById('auditForm').addEventListener('change', update);
+  })();
+
+  // Instagram @ prefill guard
+  (function () {
+    const ig = document.getElementById('instagram');
+    ig.addEventListener('input', () => {
+      if (!ig.value.startsWith('@')) ig.value = '@' + ig.value.replace(/^@+/, '');
+    });
+    ig.addEventListener('focus', () => {
+      if (ig.value === '@') ig.setSelectionRange(1, 1);
+    });
+  })();
+
+  // Form validation + submit
+  const form = document.getElementById('auditForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function showError(id, show) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('show', show);
+  }
+  function setFieldError(fieldId, errId, isError) {
+    const f = document.getElementById(fieldId);
+    if (f) f.classList.toggle('error', isError);
+    showError(errId, isError);
+  }
+  function validate() {
+    let firstInvalid = null;
+
+    const fn = document.getElementById('firstName').value.trim();
+    const fnBad = fn.length < 1;
+    setFieldError('firstName', 'firstName-err', fnBad);
+    if (fnBad && !firstInvalid) firstInvalid = 'firstName';
+
+    const em = document.getElementById('email').value.trim();
+    const emBad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+    setFieldError('email', 'email-err', emBad);
+    if (emBad && !firstInvalid) firstInvalid = 'email';
+
+    const ig = document.getElementById('instagram').value.trim();
+    const igBad = ig.length < 2 || ig === '@';
+    setFieldError('instagram', 'instagram-err', igBad);
+    if (igBad && !firstInvalid) firstInvalid = 'instagram';
+
+    const rev = document.querySelector('input[name="revenue"]:checked');
+    showError('revenue-err', !rev);
+    if (!rev && !firstInvalid) firstInvalid = 'revenue';
+
+    const socials = document.querySelectorAll('input[name="socials"]:checked');
+    const socialsBad = socials.length === 0;
+    showError('socials-err', socialsBad);
+    if (socialsBad && !firstInvalid) firstInvalid = 'socials';
+
+    const dur = document.querySelector('input[name="duration"]:checked');
+    showError('duration-err', !dur);
+    if (!dur && !firstInvalid) firstInvalid = 'duration';
+
+    const src = document.querySelector('input[name="source"]:checked');
+    showError('source-err', !src);
+    if (!src && !firstInvalid) firstInvalid = 'source';
+
+    return firstInvalid;
+  }
+
+  const revenueLabels = {
+    'under-25k': 'Under £25k a year',
+    '25k-100k': '£25k to £100k a year',
+    '100k-250k': '£100k to £250k a year',
+    '250k-500k': '£250k to £500k a year',
+    '500k-plus': '£500k+ a year'
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const invalid = validate();
+    if (invalid) {
+      const el = document.querySelector('[name="' + invalid + '"]') || document.getElementById(invalid);
+      if (el) {
+        const focusable = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ? el : el.querySelector('input, textarea');
+        (focusable || el).focus();
+        (focusable || el).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    const revenueVal = document.querySelector('input[name="revenue"]:checked').value;
+
+    // Disable + show spinner
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-label').textContent = 'Sending';
+    const sp = document.createElement('span');
+    sp.className = 'spinner';
+    submitBtn.appendChild(sp);
+
+    // Build payload (UTM + answers)
+    const payload = new FormData(form);
+    Object.entries(utmData).forEach(([k, v]) => payload.append(k, v));
+    payload.append('audit_completed_at', new Date().toISOString());
+
+    // POST to placeholder Formspree endpoint
+    // BRYAN: swap this with the GHL inbound webhook URL when wired
+    try {
+      await fetch('https://madeeas.app.n8n.cloud/webhook/atom-intake', {
+        method: 'POST',
+        body: payload,
+        headers: { 'Accept': 'application/json' }
+      });
+    } catch (err) {
+      // Non-blocking: we still route to the outcome screen
+      console.warn('Form post failed, routing user anyway', err);
+    }
+
+    routeOutcome(revenueVal);
   });
 
-  function showErr(m) { errEl.textContent = m; errEl.classList.remove("hide"); }
+  function routeOutcome(revenueVal) {
+    document.getElementById('auditForm').style.display = 'none';
+    document.querySelector('.progress').style.display = 'none';
 
-  // After the intake submits, reveal the booking calendar.
-  function showCalendar() {
-    var cal = document.getElementById("cal-iframe");
-    if (cal && !cal.src) cal.src = cal.getAttribute("data-src");
-    document.getElementById("form-view").classList.add("hide");
-    document.getElementById("cal-view").classList.remove("hide");
-    document.querySelector(".wrap").classList.add("cal-wrap");
-    window.scrollTo(0, 0);
+    if (revenueVal === 'under-25k') {
+      const a = document.getElementById('outcomeNotFit');
+      a.classList.add('active');
+      if (!REDUCED) animate(a, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: EASE_OUT });
+      a.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      const b = document.getElementById('outcomeFit');
+      const summary = document.getElementById('revenueSummary');
+      summary.innerHTML = 'You said: <strong>' + (revenueLabels[revenueVal] || 'over £25k a year') + '</strong>';
+      b.classList.add('active');
+      if (!REDUCED) animate(b, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: EASE_OUT });
+      b.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Hide booking skeleton when iframe loads
+      const iframe = document.getElementById('bookingIframe');
+      const skel = document.getElementById('bookingSkeleton');
+      iframe.addEventListener('load', () => {
+        if (skel) { skel.style.opacity = '0'; skel.style.pointerEvents = 'none'; }
+      });
+    }
   }
 
-  // When the GoHighLevel calendar reports a completed booking, go to the homepage.
-  // Matched conservatively so the widget's load/resize messages don't trigger early.
-  window.addEventListener("message", function (e) {
-    var origin = (e && e.origin) || "";
-    if (origin.indexOf("leadconnectorhq.com") === -1 && origin.indexOf("msgsndr") === -1) return;
-    var d = e.data;
-    var blob = (typeof d === "string") ? d : JSON.stringify(d || "");
+  // When the GoHighLevel calendar reports a completed booking, send them to the homepage.
+  // Matched conservatively so the widget's load/resize messages don't redirect early.
+  window.addEventListener('message', (e) => {
+    const origin = (e && e.origin) || '';
+    if (origin.indexOf('leadconnectorhq.com') === -1 && origin.indexOf('msgsndr') === -1) return;
+    const d = e.data;
+    const blob = (typeof d === 'string') ? d : JSON.stringify(d || '');
     if (/appointment|booking/i.test(blob) && /(book|schedul|confirm|success|complete)/i.test(blob)) {
-      window.location.href = "index.html";
+      window.location.href = 'index.html';
     }
   });
+
+  // Playbook capture form
+  document.getElementById('playbookForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const em = document.getElementById('playbookEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+      document.getElementById('playbookEmail').classList.add('error');
+      document.getElementById('playbookEmail').focus();
+      return;
+    }
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.querySelector('.btn-label').textContent = 'Sending';
+
+    const fd = new FormData();
+    fd.append('email', em);
+    fd.append('list', 'atom-playbook-not-fit');
+    Object.entries(utmData).forEach(([k, v]) => fd.append(k, v));
+    try {
+      await fetch('https://madeeas.app.n8n.cloud/webhook/atom-intake', {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' }
+      });
+    } catch (err) { /* non-blocking */ }
+
+    btn.querySelector('.btn-label').textContent = 'Sent. Check your inbox';
+    setTimeout(() => {
+      e.target.innerHTML = '<p style="margin: 0; color: var(--neon); font-family: var(--font-head); font-weight: 600;">Sent. Check your inbox in 2 minutes.</p>';
+    }, 600);
+  });
+
+  // Hover lift on submit button
+  (function () {
+    if (REDUCED) return;
+    hover(submitBtn, () => {
+      animate(submitBtn, { y: -2 }, { duration: 0.2, easing: 'ease-out' });
+      return () => animate(submitBtn, { y: 0 }, { duration: 0.25, easing: 'ease-out' });
+    });
+  })();
 </script>
+
 </body>
 </html>
