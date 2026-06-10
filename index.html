@@ -2794,15 +2794,13 @@
          hero is in view (IntersectionObserver) and is skipped entirely when prefers-reduced-motion.
          Palette swapped to Atom's cyan accent on dark navy. -->
     <script type="module">
-      // Background trails run regardless of the OS "reduce motion" setting, to
-      // match the rest of the site's animations (some machines have reduced
-      // motion enabled, which previously hid the background entirely).
-      const reduceMotion = false;
+      // Always initialise the WebGL background so it renders on every machine.
+      // For visitors who prefer reduced motion we draw a single static frame
+      // (see init/animate at the end) instead of running the animation loop.
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const canvasEl = document.getElementById('webgl-canvas');
 
-      if (reduceMotion) {
-        canvasEl.style.display = 'none';
-      } else {
+      {
         const [{ default: THREE_NS }, modules] = await Promise.all([
           import('three').then(m => ({ default: m })),
           Promise.all([
@@ -3116,7 +3114,14 @@
         }
 
         init();
-        animate();
+        if (reduceMotion) {
+          // Reduced motion: render one static frame instead of animating.
+          globalTime = 8;
+          trailMaterials.forEach(m => m.uTime.value = globalTime);
+          composer.render();
+        } else {
+          animate();
+        }
       }
     </script>
   </body>
