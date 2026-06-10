@@ -2794,7 +2794,10 @@
          hero is in view (IntersectionObserver) and is skipped entirely when prefers-reduced-motion.
          Palette swapped to Atom's cyan accent on dark navy. -->
     <script type="module">
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Background trails run regardless of the OS "reduce motion" setting, to
+      // match the rest of the site's animations (some machines have reduced
+      // motion enabled, which previously hid the background entirely).
+      const reduceMotion = false;
       const canvasEl = document.getElementById('webgl-canvas');
 
       if (reduceMotion) {
