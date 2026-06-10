@@ -1959,6 +1959,74 @@
         .booking h2 { font-size: clamp(30px, 8vw, 42px); }
         .ft .statement { font-size: clamp(24px, 7vw, 36px); }
       }
+
+      /* ───────────────────────── The Community (gallery, adapted from atom-link) ───────────────────────── */
+      .community-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-flow: dense;
+        gap: 14px;
+        max-width: 1080px;
+        margin: 0 auto 32px;
+      }
+      @media (min-width: 560px)  { .community-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (min-width: 1024px) { .community-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+      .community-tile {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        background: repeating-linear-gradient(45deg, var(--paper-3) 0 14px, var(--paper-2) 14px 28px);
+        border: 1px solid var(--rule-soft);
+        transition: transform .4s var(--ease-out), box-shadow .4s var(--ease-out), border-color .4s var(--ease-out);
+      }
+      .community-tile:hover {
+        transform: scale(1.02);
+        border-color: oklch(60% 0.10 215 / 0.6);
+        box-shadow: 0 18px 50px -16px oklch(0% 0 0 / 0.55), 0 0 28px -10px oklch(82% 0.150 215 / 0.4);
+      }
+      .community-tile img,
+      .community-tile video {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; display: block;
+      }
+      .community-tile .community-fallback {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--ink-3);
+        font-family: var(--font-mono);
+        font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+        text-align: center; padding: 14px; line-height: 1.6;
+      }
+      @media (min-width: 560px)  { .community-tile.wide { grid-column: span 2; aspect-ratio: 16 / 9; } }
+      @media (min-width: 1024px) { .community-tile.portrait { grid-row: span 2; aspect-ratio: 3 / 4; } }
+      .community-cap {
+        text-align: center;
+        color: var(--ink-3);
+        font-size: 14px;
+        max-width: 760px;
+        margin: 0 auto 36px;
+        line-height: 1.55;
+      }
+      .community-follow {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 28px 24px;
+        border-radius: var(--radius-card);
+        background: linear-gradient(135deg, oklch(15% 0.04 215 / 0.55) 0%, oklch(11% 0.018 220 / 0.55) 80%);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--rule);
+        text-align: center;
+      }
+      .community-follow h3 { font-size: clamp(20px, 2.5vw, 26px); margin: 0 0 10px; line-height: 1.25; }
+      .community-follow p { color: var(--ink-2); margin: 0 0 18px; font-size: 15px; }
+      @media (max-width: 560px) {
+        .community-grid { gap: 10px; }
+        .community-tile.wide { aspect-ratio: 4 / 3; }
+        .community-follow { padding: 22px 18px; }
+      }
     </style>
   </head>
   <body>
@@ -2320,6 +2388,93 @@
             <summary>What if I am still small?</summary>
             <p>Small is fine. The system scales with you. We have helped coaches with under a thousand followers book calls.</p>
           </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── The Community ───────────────────── -->
+    <section class="s community" id="community" aria-label="The community">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">The Community</span>
+          <h2>Real coaches. Real sessions. <em>Real wins.</em></h2>
+          <p>This is what the work actually looks like. Not stock. Not staged. Just the day to day.</p>
+        </div>
+
+        <div class="community-grid" role="list" aria-label="Community images and videos">
+
+          <div class="community-tile wide" role="listitem">
+            <img src="screenshots/community-1.jpg" alt="Wide shot of a community session" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-1.jpg<br>Wide landscape</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <img src="screenshots/community-2.jpg" alt="Community member lifting" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-2.jpg<br>Square</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <video autoplay muted loop playsinline poster="screenshots/community-3-poster.jpg" preload="metadata" aria-label="Community session clip" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <source src="screenshots/community-3.mp4" type="video/mp4" />
+            </video>
+            <div class="community-fallback" style="display:none;">community-3.mp4<br>Video clip</div>
+          </div>
+
+          <div class="community-tile portrait" role="listitem">
+            <img src="screenshots/community-4.jpg" alt="Portrait of a coach training" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-4.jpg<br>Portrait</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <img src="screenshots/community-5.jpg" alt="Weekly meetup group photo" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-5.jpg<br>Square</div>
+          </div>
+
+          <div class="community-tile wide" role="listitem">
+            <img src="screenshots/community-6.jpg" alt="Group run with the community" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-6.jpg<br>Wide landscape</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <video autoplay muted loop playsinline poster="screenshots/community-7-poster.jpg" preload="metadata" aria-label="Group run clip" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <source src="screenshots/community-7.mp4" type="video/mp4" />
+            </video>
+            <div class="community-fallback" style="display:none;">community-7.mp4<br>Video clip</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <img src="screenshots/community-8.jpg" alt="Coaching moment on the gym floor" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-8.jpg<br>Square</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <img src="screenshots/community-9.jpg" alt="Mid session with a client" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-9.jpg<br>Square</div>
+          </div>
+
+          <div class="community-tile wide" role="listitem">
+            <img src="screenshots/community-10.jpg" alt="Community lineup wide shot" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-10.jpg<br>Wide landscape</div>
+          </div>
+
+          <div class="community-tile" role="listitem">
+            <img src="screenshots/community-11.jpg" alt="Post session smiles" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-11.jpg<br>Square</div>
+          </div>
+
+          <div class="community-tile portrait" role="listitem">
+            <img src="screenshots/community-12.jpg" alt="Portrait of a community member" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+            <div class="community-fallback" style="display:none;">community-12.jpg<br>Portrait</div>
+          </div>
+
+        </div>
+
+        <p class="community-cap">These are stills from sessions, runs, and weekly meetups with the community. Sessions happen most weeks. Open invite for clients.</p>
+
+        <div class="community-follow">
+          <h3>Follow the journey on Instagram.</h3>
+          <p>Elom posts the real day to day. The wins, the losses, the systems being built.</p>
+          <a class="btn btn-primary" href="https://instagram.com/elom.ahlijah" target="_blank" rel="noopener noreferrer">@elom.ahlijah on Instagram &rarr;</a>
         </div>
       </div>
     </section>
