@@ -1818,35 +1818,59 @@
       /* Footer accent on statement em */
       .ft .statement em { font-style: normal; color: var(--accent); }
 
-      /* ═════════════ Scroll-reveal: slide in / slide out ═════════════
-         Elements slide in from below as they enter the viewport, and
-         slide out upward as they leave (and vice-versa on scroll up).
-         Uses `translate`/`opacity` only — no blur, no scale — for a
-         clean directional motion. */
+      /* ═════════════ Scroll reveal (progressive enhancement) ═════════════
+         Content is visible by default. The reveal script adds [data-reveal]
+         only when motion is allowed and supported, so a no-JS or
+         reduced-motion render shows everything with zero animation — nothing
+         can ship blank. Motion is one-directional: each element rises in
+         once and is then unobserved; it never animates back out on scroll.
+         A short horizontal accent is reserved for the two side-by-side media
+         blocks (founder photo, booking aside) where direction mirrors the
+         layout — everywhere else is a quiet rise. */
       [data-reveal] {
         opacity: 0;
-        translate: 0 64px;
+        translate: 0 26px;
         transition:
-          opacity   700ms var(--ease-out),
-          translate 800ms var(--ease-out);
+          opacity   620ms var(--ease-out),
+          translate 700ms var(--ease-out);
         transition-delay: var(--reveal-delay, 0ms);
         will-change: opacity, translate;
       }
-      [data-reveal].is-below { opacity: 0; translate: 0  64px; }
-      [data-reveal].is-above { opacity: 0; translate: 0 -64px; }
-
-      [data-reveal="left"]          { opacity: 0; translate: -72px 0;   }
-      [data-reveal="left"].is-below { opacity: 0; translate: -56px 36px; }
-      [data-reveal="left"].is-above { opacity: 0; translate: -56px -36px; }
-
-      [data-reveal="right"]          { opacity: 0; translate: 72px 0;   }
-      [data-reveal="right"].is-below { opacity: 0; translate: 56px 36px; }
-      [data-reveal="right"].is-above { opacity: 0; translate: 56px -36px; }
+      [data-reveal="left"]  { translate: -34px 0; }
+      [data-reveal="right"] { translate:  34px 0; }
 
       [data-reveal].is-visible {
         opacity: 1;
         translate: 0 0;
+        will-change: auto;
       }
+
+      /* Belt-and-braces: if a reduced-motion user somehow has [data-reveal]
+         applied, force the visible resting state with no transition. */
+      @media (prefers-reduced-motion: reduce) {
+        [data-reveal] {
+          opacity: 1 !important;
+          translate: 0 0 !important;
+          transition: none !important;
+        }
+      }
+
+      /* ═════════════ Hero load entrance ═════════════
+         The page's one orchestrated load moment, alongside the trails.
+         Pure CSS so it needs no JS and can't gate visibility; the global
+         reduced-motion rule above collapses it to the visible end state. */
+      @keyframes heroRise {
+        from { opacity: 0; translate: 0 22px; }
+        to   { opacity: 1; translate: 0 0;    }
+      }
+      .hero > .container:not(.trust) > * {
+        animation: heroRise 760ms var(--ease-out) both;
+      }
+      .hero > .container:not(.trust) > :nth-child(1) { animation-delay:  80ms; }
+      .hero > .container:not(.trust) > :nth-child(2) { animation-delay: 180ms; }
+      .hero > .container:not(.trust) > :nth-child(3) { animation-delay: 300ms; }
+      .hero > .container:not(.trust) > :nth-child(4) { animation-delay: 420ms; }
+      .hero > .container:not(.trust) > :nth-child(5) { animation-delay: 520ms; }
 
       /* ═════════════ Mobile polish ═════════════ */
 
@@ -2601,53 +2625,52 @@
         });
       })();
 
-      // Scroll-reveal — slide in / slide out, bi-directional.
-      // Note: intentionally ignores prefers-reduced-motion so animations
-      // always play for clients/viewers regardless of OS accessibility setting.
+      // Scroll reveal — one-directional, reduced-motion-safe.
+      // Bails entirely for reduced-motion (and no-IO) users, leaving every
+      // section visible with no animation. Otherwise it tags grouped elements
+      // with [data-reveal] (the CSS hidden state only applies once tagged),
+      // rises each in once as it enters the viewport, then unobserves it — so
+      // content never animates back out and nothing pauses-then-stays-hidden.
       (function () {
-        if (!('IntersectionObserver' in window)) return;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || !('IntersectionObserver' in window)) return;
 
         var groups = [
-          // Hero + section heads
-          { sel: '.hero > .container > *'                                       },
-          { sel: '.hero .trust-cell'                                            },
+          // Section heads (the hero has its own pure-CSS load entrance below)
+          { sel: '.hero .trust-cell',                            stagger: 70    },
           { sel: '.section-head > *'                                            },
           { sel: '.founder-head > *'                                            },
 
-          // Cards cascade between siblings
-          { sel: '.problem-card',                                stagger: 110   },
-          { sel: '.step',                                        stagger: 130   },
-          { sel: '.testimonial',                                 stagger: 110   },
-          { sel: '.feature',                                     stagger: 80    },
+          // Card grids cascade between siblings
+          { sel: '.problem-card',                                stagger: 90    },
+          { sel: '.step',                                        stagger: 100   },
+          { sel: '.testimonial',                                 stagger: 90    },
+          { sel: '.feature',                                     stagger: 70    },
 
           // Promise
           { sel: '.promise-card'                                                },
-          { sel: '.promise-row',     variant: 'left',            stagger: 90    },
+          { sel: '.promise-row',                                 stagger: 80    },
 
-          // Founder
-          { sel: '.founder-photo',   variant: 'left'                            },
+          // Founder — directional accents mirror the side-by-side layout
+          { sel: '.founder-photo',      variant: 'left'                         },
           { sel: '.founder-body > *'                                            },
           { sel: '.founder-side-photo', variant: 'right'                        },
-          { sel: '.founder-side-card',  variant: 'right',        stagger: 130   },
+          { sel: '.founder-side-card',  variant: 'right',        stagger: 110   },
 
           // FAQ
-          { sel: '.faq-list details',                            stagger: 70    },
+          { sel: '.faq-list details',                            stagger: 60    },
 
           // Booking
-          { sel: '.booking-main'                                                },
-          { sel: '.booking-status > *'                                          },
-          { sel: '.booking-aside > *',  variant: 'right',        stagger: 130   },
-          { sel: '.booking-card li',    variant: 'left'                         },
+          { sel: '.booking-card li',                             stagger: 70    },
 
           // Footer
           { sel: 'footer.ft .statement'                                         },
-          { sel: 'footer.ft .ft-meta > *'                                       },
+          { sel: 'footer.ft .ft-meta > *',                       stagger: 60    },
         ];
 
         groups.forEach(function (g) {
-          var nodes = document.querySelectorAll(g.sel);
           var byParent = new Map();
-          nodes.forEach(function (el) {
+          document.querySelectorAll(g.sel).forEach(function (el) {
             var key = el.parentElement;
             if (!byParent.has(key)) byParent.set(key, []);
             byParent.get(key).push(el);
@@ -2665,34 +2688,26 @@
         });
 
         var io = new IntersectionObserver(function (entries) {
-          var vh = window.innerHeight || document.documentElement.clientHeight;
           entries.forEach(function (entry) {
-            var el = entry.target;
             if (entry.isIntersecting) {
-              el.classList.add('is-visible');
-              el.classList.remove('is-above', 'is-below');
-            } else {
-              el.classList.remove('is-visible');
-              // Element's center vs viewport midline → which side it left from.
-              var r = entry.boundingClientRect;
-              var center = r.top + r.height / 2;
-              if (center < vh / 2) {
-                el.classList.add('is-above');
-                el.classList.remove('is-below');
-              } else {
-                el.classList.add('is-below');
-                el.classList.remove('is-above');
-              }
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
             }
           });
         }, {
-          // Shrink the trigger zone so slide-out fires while still partially visible.
-          rootMargin: '-12% 0px -12% 0px',
-          threshold: 0
+          // Trigger a touch before fully in view; reveal once ~8% is showing.
+          rootMargin: '0px 0px -8% 0px',
+          threshold: 0.08
         });
 
+        // Anything already on screen when the script runs is shown instantly
+        // (no hidden frame, so no flash for above-the-fold content). Only
+        // below-the-fold elements are observed and rise in on scroll.
+        var vh = window.innerHeight || document.documentElement.clientHeight;
         document.querySelectorAll('[data-reveal]').forEach(function (el) {
-          io.observe(el);
+          var r = el.getBoundingClientRect();
+          if (r.top < vh && r.bottom > 0) el.classList.add('is-visible');
+          else io.observe(el);
         });
       })();
 
