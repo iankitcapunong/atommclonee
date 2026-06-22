@@ -1366,6 +1366,60 @@
         .promise-row-value { text-align: left; }
       }
 
+      /* Atom Roadmap card — reuses the frosted promise-card shell */
+      .roadmap-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 16px;
+        border-radius: 50px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .roadmap-body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px 44px;
+        flex-wrap: wrap;
+        padding: 26px 28px;
+      }
+      .roadmap-bullets {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+      .roadmap-bullets li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--ink-2);
+        transition: color 320ms var(--ease-out);
+      }
+      .roadmap-card:hover .roadmap-bullets li { color: var(--ink); }
+      .roadmap-bullets .b-bullet {
+        color: var(--accent);
+        font-size: 13px;
+        line-height: 1.6;
+        flex: none;
+        width: 14px;
+        font-weight: 700;
+      }
+      .roadmap-body .btn { flex: none; }
+      @media (max-width: 600px) {
+        .roadmap-body { flex-direction: column; align-items: flex-start; }
+        .roadmap-body .btn { align-self: stretch; justify-content: center; }
+      }
+
       /* Testimonial enhancements (summary line, big-num block, bullet list) */
       .testimonial .t-summary {
         font-size: 15.5px;
@@ -2413,6 +2467,37 @@
           <div class="promise-footer">
             <p>No fine print. If we miss the 30 day mark, your next quarter is on us. Written into the agreement.</p>
             <a href="#booking" class="btn btn-ghost btn-small">Read The Promise</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────── Atom Roadmap (a smaller first step) ───────────────────── -->
+    <section class="s tight" id="roadmap">
+      <div class="container">
+        <div class="section-head">
+          <span class="mono">A smaller first step</span>
+          <h2>Start with the <em>Atom Roadmap.</em></h2>
+          <p>Want a custom AI audit before committing to a quarter? &pound;500 one-time. Credited back when you upgrade.</p>
+        </div>
+        <div class="promise-card roadmap-card">
+          <div class="promise-header">
+            <span class="roadmap-chip">&pound;500 one-time</span>
+            <span class="promise-live"><span class="dot"></span>Paid up front, fully credited on upgrade</span>
+          </div>
+          <div class="roadmap-body">
+            <ul class="roadmap-bullets">
+              <li><span class="b-bullet check" aria-hidden="true">✓</span>60-min audit, custom report, 30-min walkthrough.</li>
+              <li><span class="b-bullet check" aria-hidden="true">✓</span>3 specific AI tools mapped to your bottlenecks.</li>
+              <li><span class="b-bullet check" aria-hidden="true">✓</span>ROI math you can show your accountant.</li>
+            </ul>
+            <a href="#booking" class="btn btn-primary">
+              Book the Roadmap
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+          <div class="promise-footer">
+            <p>Credited toward your first quarterly retainer if you sign within 14 days.</p>
           </div>
         </div>
       </div>
